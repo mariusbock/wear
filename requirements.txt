@@ -1,0 +1,9 @@
+pandas==1.5.3
+neptune==1.1.1
+scikit-learn==1.2.1
+chardet==5.1.0
+matplotlib==3.7.0
+pyyaml==6.0
+numpy==1.23.5
+joblib==1.2.0
+h5py==3.7.0
