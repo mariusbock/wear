@@ -1,9 +1,9 @@
-# WEAR: A Multimodal Dataset for Wearable and Egocentric Video Activity Recognition
+# WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition
 
-<img src="teaser.gif" width="1080"/>
+<img src="teaser.gif" width="100%"/>
 
 ## Abstract
-Though research has shown the complementarity of camera- and inertial-based data, datasets which offer both modalities remain scarce. In this paper we introduce WEAR, a multimodal benchmark dataset for both vision- and wearable-based Human Activity Recognition (HAR). The dataset comprises data from 18 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and camera (egocentric video) data recorded at 10 different outside locations. WEAR features a diverse set of activities which are low in inter-class similarity and, unlike previous egocentric datasets, not defined by human-object-interactions nor originate from inherently distinct activity categories. Provided benchmark results reveal that single-modality architectures have different strengths and weaknesses in their prediction performance. Further, in light of the recent success of transformer-based video action detection models, we demonstrate their versatility by applying them in a plain fashion using vision, inertial and combined (vision + inertial) features as input. Results show that vision transformers are not only able to produce competitive results using only inertial data, but also can function as an architecture to fuse both modalities by means of simple concatenation, with the multimodal approach being able to produce the highest average mAP, precision and close-to-best F1-scores. Up until now, vision-based transformers have neither been explored in inertial nor in multimodal human activity recognition, making our approach the first to do so. An arXiv of our paper can be found at this [link](https://arxiv.org/abs/2304.05088).
+Though research has shown the complementarity of camera- and inertial-based data, datasets which offer both modalities remain scarce. In this paper, we introduce WEAR, an outdoor sports dataset for both vision- and inertial-based Human Activity Recognition (HAR). The dataset comprises data from 18 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and camera (egocentric video) data recorded at 10 different outside locations. Unlike previous egocentric datasets, WEAR provides a challenging prediction scenario marked by purposely introduced variations of certain activities as well as an overall small information overlap across modalities. Provided benchmark results reveal that single-modality architectures each have different strengths and weaknesses in their prediction performance. Further, in light of the recent success of transformer-based temporal action localization models, we demonstrate their versatility by applying them in a plain fashion using vision, inertial and combined (vision + inertial) features as input. Results show that vision transformers are not only able to produce competitive results using only inertial data, but also can function as an architecture to fuse both modalities by means of simple concatenation, with the combined approach (vision + inertial features) being able to produce the highest mean average precision and \MB{close-to-best} F1-score. Our approach is not only the first to demonstrate the applicability of vision-based transformers for inertial-based, but also their capabilities of combining inertial- and vision-based data, in the context of Human Activity Recognition. The code to reproduce experiments is publicly available [here](https://github.com/mariusbock/wear). An arXiv version of our paper is available [here](https://arxiv.org/abs/2304.05088).
 
 ## Changelog
 - 18/04/2023: provided code to reproduce experiments.
@@ -31,7 +31,7 @@ Each config file represents one type of experiment. Each experiment was run thre
 
 ### Logging using Neptune.ai
 
-In order to log experiments to [Neptune.ai](https://neptune.ai) please provide `project`and `api_token` information in your local deployment (see lines `33-34` in `main.py`)
+In order to log experiments to [Neptune.ai](https://neptune.ai) please provide `project`and `api_token` information in your local deployment (see lines `34-35` in `main.py`)
 
 ## Contact
 Marius Bock (marius.bock@uni-siegen.de)
@@ -39,8 +39,8 @@ Marius Bock (marius.bock@uni-siegen.de)
 ## Cite as
 ```
 @article{bock2023wear,
-  title={WEAR: A Multimodal Dataset for Wearable and Egocentric Video Activity Recognition},
-  author={Bock, Marius and Moeller, Michael and Van Laerhoven, Kristof and Kuehne, Hilde},
+  title={WEAR: An Outdoor Sports for Wearable and Egocentric Video Activity Recognition},
+  author={Bock, Marius and Kuehne, Hilde and Van Laerhoven, Kristof and Moeller, Michael},
   volume={abs/2304.05088},
   journal={CoRR},
   year={2023},

@@ -19,7 +19,8 @@ class WearDataset(Dataset):
         sens_folder,
         sampling_rate,
         include_null, 
-        json_file,       # json file for annotations
+        has_null,
+        json_anno,       # json file for annotations
         feat_stride,     # temporal stride of the feats
         num_frames,      # number of frames for each feat
         default_fps,     # default fps
@@ -35,19 +36,20 @@ class WearDataset(Dataset):
         force_upsampling
     ):
         # file path
-        assert os.path.exists(feat_folder) and os.path.exists(json_file)
+        assert os.path.exists(feat_folder) and os.path.exists(json_anno)
         assert isinstance(split, tuple) or isinstance(split, list)
         assert crop_ratio == None or len(crop_ratio) == 2
         self.feat_folder = feat_folder
         self.sens_folder = sens_folder
         self.sampling_rate = sampling_rate
         self.include_null = include_null
+        self.has_null = has_null
         if file_prefix is not None:
             self.file_prefix = file_prefix
         else:
             self.file_prefix = ''
         self.file_ext = file_ext
-        self.json_file = json_file
+        self.json_anno = json_anno
         self.db_attributes = {
             'dataset_name': 'wear',
             'tiou_thresholds': tiou_thresholds,
@@ -74,7 +76,7 @@ class WearDataset(Dataset):
         self.crop_ratio = crop_ratio
 
         # load database and select the subset
-        dict_db, label_dict = self._load_json_db(self.json_file)
+        dict_db, label_dict = self._load_json_db(self.json_anno)
         assert len(label_dict) == num_classes
         self.data_list = dict_db
         self.label_dict = label_dict
@@ -82,9 +84,9 @@ class WearDataset(Dataset):
     def get_attributes(self):
         return self.db_attributes
 
-    def _load_json_db(self, json_file):
+    def _load_json_db(self, json_anno):
         # load database and select the subset
-        with open(json_file, 'r') as fid:
+        with open(json_anno, 'r') as fid:
             json_data = json.load(fid)
         json_db = json_data['database']
 
@@ -210,9 +212,3 @@ class WearDataset(Dataset):
             )
 
         return data_dict
-
-    def get_subjects(self):
-        sbjs = []
-        for _ in self.data_list:
-            sbjs.append(_['id'])
-        return sbjs

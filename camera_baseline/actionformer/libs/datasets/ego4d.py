@@ -16,7 +16,7 @@ class EGO4DDataset(Dataset):
         is_training,     # if in training mode
         split,           # split, a tuple/list allowing concat of subsets
         feat_folder,     # folder for features
-        json_file,       # json file for annotations
+        json_anno,       # json file for annotations
         feat_stride,     # temporal stride of the feats
         num_frames,      # number of frames for each feat
         default_fps,     # default fps
@@ -34,7 +34,7 @@ class EGO4DDataset(Dataset):
         if not isinstance(feat_folder, (list, tuple)):
             feat_folder = (feat_folder, )
         assert all([os.path.exists(folder) for folder in feat_folder])
-        assert os.path.exists(json_file)
+        assert os.path.exists(json_anno)
         assert isinstance(split, tuple) or isinstance(split, list)
         assert crop_ratio == None or len(crop_ratio) == 2
         self.feat_folder = feat_folder
@@ -43,7 +43,7 @@ class EGO4DDataset(Dataset):
         else:
             self.file_prefix = ''
         self.file_ext = file_ext
-        self.json_file = json_file
+        self.json_anno = json_anno
 
         # split / training mode
         self.split = split
@@ -62,7 +62,7 @@ class EGO4DDataset(Dataset):
         self.crop_ratio = crop_ratio
 
         # load database and select the subset
-        dict_db, label_dict = self._load_json_db(self.json_file)
+        dict_db, label_dict = self._load_json_db(self.json_anno)
         assert len(label_dict) == num_classes
         self.data_list = dict_db
         self.label_dict = label_dict
@@ -77,9 +77,9 @@ class EGO4DDataset(Dataset):
     def get_attributes(self):
         return self.db_attributes
 
-    def _load_json_db(self, json_file):
+    def _load_json_db(self, json_anno):
         # load database and select the subset
-        with open(json_file, 'r') as fid:
+        with open(json_anno, 'r') as fid:
             json_data = json.load(fid)
         json_db = json_data['database']
 

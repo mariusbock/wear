@@ -11,7 +11,9 @@ dataset: {
   sens_folder: ./data/wear/raw/inertial,
   input_dim: 12,
   sampling_rate: 50,
+  num_classes: 18,
   include_null: True,
+  has_null: True,
   window_size: 50,
   window_overlap: 50,
   tiou_thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]

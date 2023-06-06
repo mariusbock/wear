@@ -24,10 +24,13 @@ Install other requirements:
 pip install -r requirements.txt
 ```
 
-Compile C++ distribution of NMS (used by ActionFormer)
+Compile C++ distribution of NMS (used by Tridet and ActionFormer)
 
 ```
 cd camera_baseline/actionformer/libs/utils
+python setup.py install --user
+cd ../../../..
+cd camera_baseline/tridet/libs/utils
 python setup.py install --user
 cd ../../../..
 ```

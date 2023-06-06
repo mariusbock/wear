@@ -31,9 +31,9 @@ def remove_duplicate_annotations(ants, tol=1e-3):
     return valid_events
 
 
-def load_gt_seg_from_json(json_file, split=None, label='label_id', label_offset=0):
+def load_gt_seg_from_json(json_anno, split=None, label='label_id', label_offset=0):
     # load json file
-    with open(json_file, "r", encoding="utf8") as f:
+    with open(json_anno, "r", encoding="utf8") as f:
         json_db = json.load(f)
     json_db = json_db['database']
 
@@ -72,9 +72,9 @@ def load_gt_seg_from_json(json_file, split=None, label='label_id', label_offset=
     return gt_base
 
 
-def load_pred_seg_from_json(json_file, label='label_id', label_offset=0):
+def load_pred_seg_from_json(json_anno, label='label_id', label_offset=0):
     # load json file
-    with open(json_file, "r", encoding="utf8") as f:
+    with open(json_anno, "r", encoding="utf8") as f:
         json_db = json.load(f)
     json_db = json_db['database']
 
@@ -196,7 +196,7 @@ class ANETdetection(object):
 
         return recall
 
-    def evaluate(self, preds, threshold=0.0):
+    def evaluate(self, preds):
         """Evaluates a prediction file. For the detection task we measure the
         interpolated mean average precision to measure the performance of a
         method.
@@ -218,8 +218,7 @@ class ANETdetection(object):
                 'label': preds['label'].tolist(),
                 'score': preds['score'].tolist()
             })
-
-        preds = preds[preds.score > threshold]
+            
         # always reset ap
         self.ap = None
 

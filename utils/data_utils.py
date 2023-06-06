@@ -1,5 +1,5 @@
 # ------------------------------------------------------------------------
-# Main script to commence baseline experiments on WEAR dataset
+# Data operation utilities
 # ------------------------------------------------------------------------
 # Author: Marius Bock
 # Email: marius.bock(at)uni-siegen.de
@@ -8,28 +8,6 @@
 import numpy as np
 import pandas as pd
 
-
-label_dict = {
-    'null': 0,
-    'jogging': 1,
-    'jogging (rotating arms)': 2,
-    'jogging (skipping)': 3,
-    'jogging (sidesteps)': 4,
-    'jogging (butt-kicks)': 5,
-    'stretching (triceps)': 6,
-    'stretching (lunging)': 7,
-    'stretching (shoulders)': 8,
-    'stretching (hamstrings)': 9,
-    'stretching (lumbar rotation)': 10,
-    'push-ups': 11,
-    'push-ups (complex)': 12,
-    'sit-ups': 13,
-    'sit-ups (complex)': 14,
-    'burpees': 15,
-    'lunges': 16,
-    'lunges (complex)': 17,
-    'bench-dips': 18
-}
 
 def sliding_window_samples(data, win_len, overlap_ratio=None):
     """
@@ -136,19 +114,18 @@ def convert_samples_to_segments(ids, labels, sampling_rate):
                 act_start = curr_start_i / sampling_rate
                 act_end = curr_end_i / sampling_rate
                 act_label = curr_label - 1
-                # create annotation
-                f_video_ids.append('sbj_' + str(int(id)))
-                f_labels = np.append(f_labels, act_label)
-                f_t_start = np.append(f_t_start, act_start)
-                f_t_end = np.append(f_t_end, act_end)
-                f_score = np.append(f_score, 1)
-                
+                if curr_label != 0:
+                    # create annotation
+                    f_video_ids.append('sbj_' + str(int(id)))
+                    f_labels = np.append(f_labels, act_label)
+                    f_t_start = np.append(f_t_start, act_start)
+                    f_t_end = np.append(f_t_end, act_end)
+                    f_score = np.append(f_score, 1)
                 curr_label = l
                 curr_start_i = i + 1
-                curr_end_i = i + 1
+                curr_end_i = i + 1    
             else:
-                curr_end_i += 1
-        
+                curr_end_i += 1        
     return {
         'video-id': f_video_ids,
         'label': f_labels,
@@ -157,7 +134,7 @@ def convert_samples_to_segments(ids, labels, sampling_rate):
         'score': f_score
     }
 
-def convert_segments_to_samples(segments, sens, sampling_rate, include_null=True, threshold=0.0):
+def convert_segments_to_samples(segments, sens, sampling_rate, include_null=True, has_null=True, threshold_type='score', threshold=0.0):
     segments_df = pd.DataFrame({
         'video_id' : segments['video-id'],
         't_start' : segments['t-start'].tolist(),
@@ -165,26 +142,44 @@ def convert_segments_to_samples(segments, sens, sampling_rate, include_null=True
         'label': segments['label'].tolist(),
         'score': segments['score'].tolist()
         })
-
     preds = np.array([])
     gt = np.array([])
     scores = np.array([])
     for sbj in np.unique(sens[:, 0]):
         sbj_len = len(sens[sens[:, 0] == sbj])
-        sbj_segments = segments_df[segments_df.video_id == "sbj_" + str(int(sbj))].sort_values('score', ascending=True)
-        fil_sbj_segments = sbj_segments.loc[segments_df.score > threshold]
-
-        sbj_pred = np.zeros(sbj_len)
+        if threshold_type == 'score':
+            sbj_segments = segments_df[segments_df.video_id == "sbj_" + str(int(sbj))].sort_values('score', ascending=True)
+            fil_sbj_segments = sbj_segments.loc[segments_df.score > threshold]
+        elif threshold_type == 'topk':
+            sbj_segments = segments_df[segments_df.video_id == "sbj_" + str(int(sbj))].sort_values('score', ascending=False)
+            fil_sbj_segments = sbj_segments.loc[:]
+        
+        if len(fil_sbj_segments) == 0:
+            fil_sbj_segments = sbj_segments
+            print("Thresholding for Subject {} did not work.".format(sbj))
+             
         sbj_gt = sens[sens[:, 0] == sbj][:, -1]
+        sbj_pred = np.empty(sbj_len)
+        sbj_pred[:] = np.nan
         sbj_scores = np.zeros(sbj_len)
+            
         for _, seg in fil_sbj_segments.iterrows():
-            if include_null:
-                sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label']
-            else:
+            if not include_null and has_null:
                 sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label'] + 1
+            else:
+                sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label']
             sbj_scores[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['score']
+            
+        if has_null:
+            sbj_pred = np.nan_to_num(sbj_pred)
+        else:
+            sbj_pred = pd.Series(sbj_pred).interpolate(method='nearest')
+            sbj_pred.fillna(method="bfill", inplace=True)
+            sbj_pred.fillna(method="ffill", inplace=True)
+            sbj_pred.fillna(method="ffill", inplace=True)
+            
+
         preds = np.append(preds, sbj_pred)
         gt = np.append(gt, sbj_gt)
         scores = np.append(scores, sbj_scores)
-        
     return preds, gt, scores

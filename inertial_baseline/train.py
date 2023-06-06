@@ -4,39 +4,38 @@
 # Author: Marius Bock
 # E-mail: marius.bock(at)uni-siegen.de
 # ------------------------------------------------------------------------
-
 import os
 import numpy as np
 import pandas as pd
+
 from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 from sklearn.utils import compute_class_weight
 import torch
-from inertial_baseline.AttendAndDiscriminate import AttendAndDiscriminate
-from inertial_baseline.DeepConvLSTM import DeepConvLSTM
-from utils.data_utils import convert_samples_to_segments, label_dict, unwindow_inertial_data
 from torch.utils.data import DataLoader
 import torch.nn as nn
+
+from utils.data_utils import convert_samples_to_segments, unwindow_inertial_data
 from utils.torch_utils import init_weights, save_checkpoint, worker_init_reset_seed, InertialDataset
-from camera_baseline.actionformer.libs.utils.metrics import ANETdetection
 from utils.os_utils import mkdir_if_missing
-from scipy.signal import medfilt
+from inertial_baseline.AttendAndDiscriminate import AttendAndDiscriminate
+from inertial_baseline.DeepConvLSTM import DeepConvLSTM
+from camera_baseline.actionformer.libs.utils.metrics import ANETdetection
 
 
 def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generator, run):
-    split_name = cfg['dataset']['json_file'].split('/')[-1].split('.')[0]
-    
+    split_name = cfg['dataset']['json_anno'].split('/')[-1].split('.')[0]
     # load train and val inertial data
     train_data, val_data = np.empty((0, cfg['dataset']['input_dim'] + 2)), np.empty((0, cfg['dataset']['input_dim'] + 2))
     for t_sbj in train_sbjs:
-        t_data = pd.read_csv(os.path.join(cfg['dataset']['sens_folder'], t_sbj + '.csv'), index_col=False).replace({"label": label_dict}).fillna(0).to_numpy()
+        t_data = pd.read_csv(os.path.join(cfg['dataset']['sens_folder'], t_sbj + '.csv'), index_col=False).replace({"label": cfg['label_dict']}).fillna(0).to_numpy()
         train_data = np.append(train_data, t_data, axis=0)
     for v_sbj in val_sbjs:
-        v_data = pd.read_csv(os.path.join(cfg['dataset']['sens_folder'], v_sbj + '.csv'), index_col=False).replace({"label": label_dict}).fillna(0).to_numpy()
+        v_data = pd.read_csv(os.path.join(cfg['dataset']['sens_folder'], v_sbj + '.csv'), index_col=False).replace({"label": cfg['label_dict']}).fillna(0).to_numpy()
         val_data = np.append(val_data, v_data, axis=0)
 
     # define inertial datasets
-    train_dataset = InertialDataset(train_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'])
-    test_dataset = InertialDataset(val_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'])
+    train_dataset = InertialDataset(train_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'], cfg['dataset']['has_null'])
+    test_dataset = InertialDataset(val_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'], cfg['dataset']['has_null'])
 
     # define dataloaders
     train_loader = DataLoader(train_dataset, cfg['loader']['batch_size'], shuffle=True, num_workers=4, worker_init_fn=worker_init_reset_seed, generator=rng_generator, persistent_workers=True)
@@ -85,7 +84,7 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
     net.to(cfg['devices'][0])
     for epoch in range(start_epoch, cfg['train_cfg']['epochs']):
         # training
-        net, t_losses, _, _ = train_one_epoch(train_loader, net, opt, criterion, cfg['devices'][0], resume)
+        net, t_losses, _, _ = train_one_epoch(train_loader, net, opt, criterion, cfg['devices'][0])
 
         # save ckpt once in a while
         if (((epoch + 1) == cfg['train_cfg']['epochs']) or ((ckpt_freq > 0) and ((epoch + 1) % ckpt_freq == 0))):
@@ -105,7 +104,7 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
             scheduler.step()
         
         # use mAP calculation as in ActionFormer
-        det_eval = ANETdetection(cfg['dataset']['json_file'], 'validation', tiou_thresholds = cfg['dataset']['tiou_thresholds'])
+        det_eval = ANETdetection(cfg['dataset']['json_anno'], 'validation', tiou_thresholds = cfg['dataset']['tiou_thresholds'])
         # undwindow inertial data (sample-wise structure instead of windowed) 
         v_preds, v_gt = unwindow_inertial_data(val_data, test_dataset.ids, v_preds, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'])
         # convert to samples (for mAP calculation)
@@ -125,16 +124,6 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
             np.save(os.path.join(ckpt_folder, 'unprocessed_results', 'v_gt_' + split_name), v_gt)
             v_results.to_csv(os.path.join(ckpt_folder, 'unprocessed_results', 'v_seg_' + split_name + '.csv'), index=False)
 
-            # postprocessing 
-            v_preds_post = np.array([])
-            for sbj in val_sbjs:
-                sbj_pred = v_preds[val_data[:, 0] == int(sbj.split("_")[-1])]
-                f_sbj = medfilt(sbj_pred, cfg['median_filter'])
-                v_preds_post = np.append(v_preds_post, f_sbj)
-
-            v_segments_post = convert_samples_to_segments(val_data[:, 0], v_preds_post, cfg['dataset']['sampling_rate'])
-            v_mAP_post, _ = det_eval.evaluate(v_segments_post)
-        
         # calculate validation metrics
         v_mAP, _ = det_eval.evaluate(v_segments)
         conf_mat = confusion_matrix(v_gt, v_preds, normalize='true')
@@ -145,28 +134,28 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
 
         # print results to terminal
         block1 = 'Epoch: [{:03d}/{:03d}]'.format(epoch, cfg['train_cfg']['epochs'])
-        block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.mean(t_losses))
-        block3 = 'VALIDATION:\tavg. loss {:.2f}'.format(np.mean(v_losses))
+        block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.nanmean(t_losses))
+        block3 = 'VALIDATION:\tavg. loss {:.2f}'.format(np.nanmean(v_losses))
         block4 = ''
-        block4  += '\t\tAvg. mAP {:>4.2f} (%) '.format(np.mean(v_mAP) * 100)
+        block4  += '\t\tAvg. mAP {:>4.2f} (%) '.format(np.nanmean(v_mAP) * 100)
         for tiou, tiou_mAP in zip(cfg['dataset']['tiou_thresholds'], v_mAP):
             block4 += 'mAP@' + str(tiou) +  ' {:>4.2f} (%) '.format(tiou_mAP*100)
-        block4  += '\n\t\tAcc {:>4.2f} (%)'.format(np.mean(v_acc) * 100)
-        block4  += ' Prec {:>4.2f} (%)'.format(np.mean(v_prec) * 100)
-        block4  += ' Rec {:>4.2f} (%)'.format(np.mean(v_rec) * 100)
-        block4  += ' F1 {:>4.2f} (%)'.format(np.mean(v_f1) * 100)
+        block4  += '\n\t\tAcc {:>4.2f} (%)'.format(np.nanmean(v_acc) * 100)
+        block4  += ' Prec {:>4.2f} (%)'.format(np.nanmean(v_prec) * 100)
+        block4  += ' Rec {:>4.2f} (%)'.format(np.nanmean(v_rec) * 100)
+        block4  += ' F1 {:>4.2f} (%)'.format(np.nanmean(v_f1) * 100)
 
         print('\n'.join([block1, block2, block3, block4]))
 
         if run is not None:
-            run[split_name].append({"train_loss": np.mean(t_losses), "val_loss": np.mean(v_losses), "accuracy": v_acc, "precision": np.mean(v_prec), "recall": np.mean(v_rec), 'f1': np.mean(v_f1), 'mAP': np.mean(v_mAP)}, step=epoch)
+            run[split_name].append({"train_loss": np.nanmean(t_losses), "val_loss": np.nanmean(v_losses), "accuracy": v_acc, "precision": np.nanmean(v_prec), "recall": np.nanmean(v_rec), 'f1': np.nanmean(v_f1), 'mAP': np.nanmean(v_mAP)}, step=epoch)
             for tiou, tiou_mAP in zip(cfg['dataset']['tiou_thresholds'], v_mAP):
                 run[split_name].append({'mAP@' + str(tiou): tiou_mAP}, step=epoch)    
 
-    return t_losses, v_losses, v_mAP, v_mAP_post, v_preds, v_preds_post, v_gt
+    return t_losses, v_losses, v_mAP, v_preds, v_gt
 
 
-def train_one_epoch(loader, network, opt, criterion, gpu=None, resume=False):
+def train_one_epoch(loader, network, opt, criterion, gpu=None):
     losses, preds, gt = [], [], []
 
     network.train()
