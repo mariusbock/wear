@@ -10,10 +10,10 @@ Though research has shown the complementarity of camera- and inertial-based data
 - 12/04/2023: initial commit and [arXiv](https://arxiv.org/abs/2304.05088) uploaded.
 
 ## Installation
-Please follow instructions mentioned in the [INSTALL.md](/Install.md) file.
+Please follow instructions mentioned in the [INSTALL.md](/INSTALL.md) file.
 
 ## Download
-The full dataset can be downloaded via https://bit.ly/wear_dataset
+The full dataset can be downloaded [here](https://bit.ly/wear_dataset)
 
 The download folder is divided into 3 subdirectories
 - **annotations (> 1MB)**: JSON-files containing annotations per-subject using the THUMOS14-style
