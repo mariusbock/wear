@@ -102,7 +102,7 @@ a. Attribution.
 
         v. a URI or hyperlink to the Licensed Material to the extent reasonably practicable;
 
-        b. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
+b. indicate if You modified the Licensed Material and retain an indication of any previous modifications; and
 
 c. indicate the Licensed Material is licensed under this
                Public License, and include the text of, or the URI or
