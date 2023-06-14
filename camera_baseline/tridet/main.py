@@ -58,6 +58,7 @@ def run_tridet(val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generator, run
     model = make_meta_arch(cfg['model']['model_name'], **cfg['model'])
     # not ideal for multi GPU training, ok for now
     model = nn.DataParallel(model, device_ids=cfg['devices'])
+    print("Number of learnable parameters for TriDet: {}".format(sum(p.numel() for p in model.parameters() if p.requires_grad)))
     # optimizer
     optimizer = make_optimizer(model, cfg['opt'])
     # schedule

@@ -48,10 +48,12 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
             cfg['model']['conv_kernels'], cfg['model']['conv_kernel_size'], 
             cfg['model']['lstm_units'], cfg['model']['lstm_layers'], cfg['model']['dropout']
             )
+        print("Number of learnable parameters for DeepConvLSTM: {}".format(sum(p.numel() for p in net.parameters() if p.requires_grad)))
     elif cfg['name'] == 'attendanddiscriminate':
         net = AttendAndDiscriminate(
             train_dataset.channels, train_dataset.classes, cfg['model']['hidden_dim'], cfg['model']['conv_kernels'], cfg['model']['conv_kernel_size'], cfg['model']['enc_layers'], cfg['model']['enc_is_bidirectional'], cfg['model']['dropout'], cfg['model']['dropout_rnn'], cfg['model']['dropout_cls'], cfg['model']['activation'], cfg['model']['sa_div']
             )
+        print("Number of learnable parameters for A-and-D: {}".format(sum(p.numel() for p in net.parameters() if p.requires_grad)))
 
     # define criterion and optimizer
     criterion = nn.CrossEntropyLoss()

@@ -58,6 +58,7 @@ def run_actionformer(val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generato
     # model
     model = make_meta_arch(cfg['model']['model_name'], **cfg['model'])
     model = nn.DataParallel(model, device_ids=cfg['devices'])
+    print("Number of learnable parameters for ActionFormer: {}".format(sum(p.numel() for p in model.parameters() if p.requires_grad)))
     # optimizer
     optimizer = make_optimizer(model, cfg['opt'])
     # schedule

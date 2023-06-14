@@ -8,3 +8,4 @@ numpy==1.23.5
 joblib==1.2.0
 h5py==3.7.0
 seaborn==0.12.2
+plotly==5.9.0
