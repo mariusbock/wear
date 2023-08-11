@@ -18,8 +18,6 @@ class WearDataset(Dataset):
         feat_folder,     # folder for features
         sens_folder,
         sampling_rate,
-        include_null, 
-        has_null,
         json_anno,       # json file for annotations
         feat_stride,     # temporal stride of the feats
         num_frames,      # number of frames for each feat
@@ -42,8 +40,6 @@ class WearDataset(Dataset):
         self.feat_folder = feat_folder
         self.sens_folder = sens_folder
         self.sampling_rate = sampling_rate
-        self.include_null = include_null
-        self.has_null = has_null
         if file_prefix is not None:
             self.file_prefix = file_prefix
         else:

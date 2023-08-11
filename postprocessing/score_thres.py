@@ -12,6 +12,7 @@ from utils import ANETdetection, convert_segments_to_samples
 path_to_preds = ['path/to/preds/to/be/analysed']
 seeds = [1, 2, 3]
 score_thres = [0.0, 0.05, 0.1, 0.15, 0.2, 0.25]
+sampling_rate = 50
 json_files = [
     'data/wear/annotations/wear_split_1.json', 
     'data/wear/annotations/wear_split_2.json', 
@@ -45,7 +46,7 @@ for path in path_to_preds:
             
                 print("Converting to Samples....")
                 v_seg = v_seg.rename(columns={"video_id": "video-id", "t_start": "t-start", "t_end": "t-end"})
-                preds, gt, _ = convert_segments_to_samples(v_seg, v_data, 50, False, threshold=f)
+                preds, gt, _ = convert_segments_to_samples(v_seg, v_data, sampling_rate, threshold=f)
                 all_preds = np.concatenate((all_preds, preds))
                 all_gt = np.concatenate((all_gt, gt))
 

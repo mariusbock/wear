@@ -65,10 +65,7 @@ def main(args):
         with open(anno_split) as f:
             file = json.load(f)
         anno_file = file['database']
-        if (not config['dataset']['include_null']) and (config['dataset']['has_null']):
-            config['labels'] = ['null'] + list(file['label_dict'])
-        else:
-            config['labels'] = list(file['label_dict'])
+        config['labels'] = ['null'] + list(file['label_dict'])
         config['label_dict'] = dict(zip(config['labels'], list(range(len(config['labels'])))))
         train_sbjs = [x for x in anno_file if anno_file[x]['subset'] == 'Training']
         val_sbjs = [x for x in anno_file if anno_file[x]['subset'] == 'Validation']
@@ -173,7 +170,7 @@ def main(args):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config', default='./configs/60_frames_30_stride/deepconvlstm_short.yaml')
+    parser.add_argument('--config', default='./configs/60_frames_30_stride/tridet_combined.yaml')
     parser.add_argument('--eval_type', default='split')
     parser.add_argument('--neptune', default=False, type=bool) 
     parser.add_argument('--seed', default=42, type=int)       

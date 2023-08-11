@@ -3,8 +3,6 @@ dataset_name: wear
 train_split: ['training']
 val_split: ['validation']
 devices: ['cuda:0']
-threshold_type: 'score'
-threshold: 0.225
 anno_json: [
   'data/wear/annotations/wear_split_1.json',
   'data/wear/annotations/wear_split_2.json',
@@ -13,14 +11,12 @@ anno_json: [
 dataset: {
   feat_folder: ./data/wear/processed/inertial_features/120_frames_60_stride,
   sens_folder: ./data/wear/raw/inertial,
-  include_null: False,
-  has_null: True,
   sampling_rate: 50,
   file_prefix: ~,
   file_ext: .npy,
   feat_stride: 60,
   num_frames: 120,
-  input_dim: 1300,
+  input_dim: 1200,
   num_classes: 18,
   downsample_rate: 1,
   max_seq_len: 2304,

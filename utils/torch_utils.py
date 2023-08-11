@@ -11,10 +11,7 @@ from utils.data_utils import apply_sliding_window
 
 
 class InertialDataset(Dataset):
-    def __init__(self, data, window_size, window_overlap, include_null=True, has_null=True, model='deepconvlstm'):
-        if not include_null and has_null:
-            data = data[data[:, -1] != 0]
-            data[:, -1] -= 1
+    def __init__(self, data, window_size, window_overlap, model='deepconvlstm'):
         self.ids, self.features, self.labels = apply_sliding_window(data, window_size, window_overlap)
         self.classes = len(np.unique(self.labels))
         self.channels = self.features.shape[2] - 1

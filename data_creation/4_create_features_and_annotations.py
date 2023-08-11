@@ -9,21 +9,22 @@ from utils import apply_sliding_window, label_dict, convert_labels_to_annotation
 sbjs = [['sbj_0', 'sbj_1', 'sbj_2', 'sbj_3', 'sbj_4', 'sbj_5'], ['sbj_6', 'sbj_7', 'sbj_8', 'sbj_9', 'sbj_10', 'sbj_11'], ['sbj_12', 'sbj_13', 'sbj_14', 'sbj_15', 'sbj_16', 'sbj_17']]
 
 # change these parameters
-window_size = 25
+window_size = 50
 window_overlap = 50
-frames = 30
-stride = 15
+frames = 60
+stride = 30
 
 # change output folder
-raw_inertial_folder = './data/wear/raw/inertial/'
-inertial_folder = './data/wear/processed/inertial_features/{}_frames_{}_stride'.format(frames, stride)
-i3d_folder = './data/wear/processed/i3d_features/{}_frames_{}_stride'.format(frames, stride)
-combined_folder = './data/wear/processed/combined_features/{}_frames_{}_stride'.format(frames, stride)
+raw_inertial_folder = './data/wear/raw/inertial/25hz'
+inertial_folder = './data/wear/processed/inertial_features/30fps/{}_frames_{}_stride'.format(frames, stride)
+i3d_folder = './data/wear/processed/i3d_features/30fps/{}_frames_{}_stride'.format(frames, stride)
+combined_folder = './data/wear/processed/combined_features/30fps/{}_frames_{}_stride'.format(frames, stride)
+anno_folder = './data/wear/annotations/30fps'
 
 # fixed dataset properties
 nb_sbjs = 18
-fps = 60
-sampling_rate = 50
+fps = 30
+sampling_rate = 25
 
 for i, split_sbjs in enumerate(sbjs):
     wear_annotations = {'version': 'Wear', 'database': {}, 'label_dict': label_dict}
@@ -36,16 +37,22 @@ for i, split_sbjs in enumerate(sbjs):
         flat_win_sbj = win_sbj.reshape(win_sbj.shape[0], -1)
         output_inertial = flipped_sbj.reshape(flipped_sbj.shape[0], -1)
         output_i3d = np.load(os.path.join(i3d_folder, sbj + '.npy'))
-        output_combined = np.concatenate((output_inertial, output_i3d), axis=1)
+        try:
+            output_combined = np.concatenate((output_inertial, output_i3d), axis=1)
+        except ValueError:
+            print('had to chop')
+            output_combined = np.concatenate((output_inertial[:output_i3d.shape[0], :], output_i3d), axis=1)
 
         np.save(os.path.join(inertial_folder, sbj + '.npy'), output_inertial)
         np.save(os.path.join(combined_folder, sbj + '.npy'), output_combined)
 
         # create video annotations
         for j in range(nb_sbjs):
-            duration_seconds = len(raw_inertial_sbj) / sampling_rate
-            sbj_annos = convert_labels_to_annotation_json(raw_inertial_sbj.iloc[:, -1], 50, label_dict)
-            if i == j:
+            curr_sbj = "sbj_" + str(j)
+            raw_inertial_sbj_t = pd.read_csv(os.path.join(raw_inertial_folder, curr_sbj + '.csv'), index_col=None)
+            duration_seconds = len(raw_inertial_sbj_t) / sampling_rate
+            sbj_annos = convert_labels_to_annotation_json(raw_inertial_sbj_t.iloc[:, -1], sampling_rate, fps, label_dict)
+            if curr_sbj in split_sbjs:
                 train_test = 'Validation'
             else:
                 train_test = 'Training'
@@ -55,6 +62,6 @@ for i, split_sbjs in enumerate(sbjs):
                 'fps': fps,
                 'annotations': sbj_annos,
                 } 
-            with open('data/wear/annotations/' + 'wear_split_' + str(int(i)) +  '.json', 'w') as outfile:
+            with open(os.path.join(anno_folder, 'wear_split_' + str(int(i + 1)) +  '.json'), 'w') as outfile:
                 outfile.write(json.dumps(wear_annotations, indent = 4))
         

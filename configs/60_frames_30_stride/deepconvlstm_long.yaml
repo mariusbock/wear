@@ -1,7 +1,6 @@
 name: deepconvlstm
 dataset_name: wear
 devices: ['cuda:0']
-median_filter: 751
 anno_json: [
   'data/wear/annotations/wear_split_1.json',
   'data/wear/annotations/wear_split_2.json',
@@ -12,8 +11,6 @@ dataset: {
   input_dim: 12,
   sampling_rate: 50,
   num_classes: 18,
-  include_null: True,
-  has_null: True,
   window_size: 50,
   window_overlap: 50,
   tiou_thresholds: [0.3, 0.4, 0.5, 0.6, 0.7]
@@ -26,7 +23,7 @@ model: {
   dropout: 0.5
 }
 train_cfg: {
-  lr: 0.01,
+  lr: 0.0001,
   lr_decay: 0.9,
   lr_step: 10,
   epochs: 300,

@@ -111,7 +111,7 @@ def run_actionformer(val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generato
         det_eval = ANETdetection(val_dataset.json_anno, val_dataset.split[0], tiou_thresholds = val_db_vars['tiou_thresholds'])
         
         v_loss, v_segments = valid_one_epoch(val_loader, model)
-        v_preds, v_gt, _ = convert_segments_to_samples(v_segments, val_sens_data, cfg['dataset']['sampling_rate'], cfg['dataset']['include_null'], cfg['dataset']['has_null'])
+        v_preds, v_gt, _ = convert_segments_to_samples(v_segments, val_sens_data, cfg['dataset']['sampling_rate'])
         
         if ((epoch + 1) == max_epochs):
             # save raw results (for later postprocessing)

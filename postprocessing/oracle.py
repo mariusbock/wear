@@ -14,6 +14,7 @@ path_to_camera = 'path/to/best/camera/model'
 seeds = [1, 2, 3]
 majority_filter = 751
 score_threshold = 0.2
+sampling_rate = 50
 json_files = [
     'data/wear/annotations/wear_split_1.json', 
     'data/wear/annotations/wear_split_2.json', 
@@ -47,15 +48,15 @@ for s_pos, seed in enumerate(seeds):
 
         for sbj in val_sbjs:
             sbj_pred = v_orig_preds[v_data[:, 0] == int(sbj.split("_")[-1])]
-            sbj_pred = [majorityVoting(i, sbj_pred.astype(int), 751) for i in range(len(sbj_pred))]
+            sbj_pred = [majorityVoting(i, sbj_pred.astype(int), majority_filter) for i in range(len(sbj_pred))]
             preds_inertial = np.append(preds_inertial, sbj_pred)
             
         print("Converting to Samples....")
         v_seg_camera = pd.read_csv(os.path.join(path_to_camera, 'seed_' + str(seed), 'unprocessed_results/v_seg_wear_split_{}.csv'.format(int(i) + 1, seed)), index_col=None)
         v_seg_camera = v_seg_camera.rename(columns={"video_id": "video-id", "t_start": "t-start", "t_end": "t-end"})
-        preds_camera, gt, _ = convert_segments_to_samples(v_seg_camera, v_data, 50, False, threshold=0.2)
+        preds_camera, gt, _ = convert_segments_to_samples(v_seg_camera, v_data, sampling_rate, threshold=score_threshold)
         preds = combine_predictions(preds_inertial, preds_camera, gt)
-        v_seg = convert_samples_to_segments(v_data[:, 0], preds, 50)
+        v_seg = convert_samples_to_segments(v_data[:, 0], preds, sampling_rate)
         all_preds = np.concatenate((all_preds, preds))
         all_gt = np.concatenate((all_gt, gt))
 

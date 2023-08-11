@@ -34,8 +34,8 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
         val_data = np.append(val_data, v_data, axis=0)
 
     # define inertial datasets
-    train_dataset = InertialDataset(train_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'], cfg['dataset']['has_null'])
-    test_dataset = InertialDataset(val_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'], cfg['dataset']['include_null'], cfg['dataset']['has_null'])
+    train_dataset = InertialDataset(train_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'])
+    test_dataset = InertialDataset(val_data, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'])
 
     # define dataloaders
     train_loader = DataLoader(train_dataset, cfg['loader']['batch_size'], shuffle=True, num_workers=4, worker_init_fn=worker_init_reset_seed, generator=rng_generator, persistent_workers=True)
@@ -57,7 +57,7 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
 
     # define criterion and optimizer
     criterion = nn.CrossEntropyLoss()
-    opt = torch.optim.Adadelta(net.parameters(), lr=cfg['train_cfg']['lr'], weight_decay=cfg['train_cfg']['weight_decay'])
+    opt = torch.optim.Adam(net.parameters(), lr=cfg['train_cfg']['lr'], weight_decay=cfg['train_cfg']['weight_decay'])
 
     # use lr schedule if selected
     if cfg['train_cfg']['lr_step'] > 0:

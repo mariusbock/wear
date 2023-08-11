@@ -29,7 +29,7 @@ label_dict = {
     'bench-dips': 17
 }
 
-def convert_labels_to_annotation_json(labels, sampling_rate, l_dict):
+def convert_labels_to_annotation_json(labels, sampling_rate, fps, l_dict):
     annotations = []
     curr_start_i = 0
     curr_end_i = 0
@@ -49,8 +49,8 @@ def convert_labels_to_annotation_json(labels, sampling_rate, l_dict):
                         act_end
                     ],
                     'segment (frames)': [
-                        act_start * 60,
-                        act_end * 60
+                        act_start * fps,
+                        act_end * fps
                     ],
                     'label_id': l_dict[act_label]
                     }

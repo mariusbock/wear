@@ -74,7 +74,7 @@ def convert_samples_to_segments(ids, labels, sampling_rate):
         'score': f_score
     }
 
-def convert_segments_to_samples(segments, sens, sampling_rate, include_null=True, has_null=True, threshold_type='score', threshold=0.0):
+def convert_segments_to_samples(segments, sens, sampling_rate, threshold_type='score', threshold=0.0):
     segments_df = pd.DataFrame({
         'video_id' : segments['video-id'],
         't_start' : segments['t-start'].tolist(),
@@ -104,21 +104,10 @@ def convert_segments_to_samples(segments, sens, sampling_rate, include_null=True
         sbj_scores = np.zeros(sbj_len)
             
         for _, seg in fil_sbj_segments.iterrows():
-            if not include_null and has_null:
-                sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label'] + 1
-            else:
-                sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label']
+            sbj_pred[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['label'] + 1
             sbj_scores[int(np.floor(seg['t_start'] * sampling_rate)):int(np.ceil(seg['t_end'] * sampling_rate))] = seg['score']
             
-        if has_null:
-            sbj_pred = np.nan_to_num(sbj_pred)
-        else:
-            sbj_pred = pd.Series(sbj_pred).interpolate(method='nearest')
-            sbj_pred.fillna(method="bfill", inplace=True)
-            sbj_pred.fillna(method="ffill", inplace=True)
-            sbj_pred.fillna(method="ffill", inplace=True)
-            
-
+        sbj_pred = np.nan_to_num(sbj_pred)
         preds = np.append(preds, sbj_pred)
         gt = np.append(gt, sbj_gt)
         scores = np.append(scores, sbj_scores)
