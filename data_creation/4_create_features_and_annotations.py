@@ -15,16 +15,16 @@ frames = 60
 stride = 30
 
 # change output folder
-raw_inertial_folder = './data/wear/raw/inertial/25hz'
-inertial_folder = './data/wear/processed/inertial_features/30fps/{}_frames_{}_stride'.format(frames, stride)
+raw_inertial_folder = './data/wear/raw/inertial'
+inertial_folder = './data/wear/processed/inertial_features/{}_frames_{}_stride'.format(frames, stride)
 i3d_folder = './data/wear/processed/i3d_features/30fps/{}_frames_{}_stride'.format(frames, stride)
-combined_folder = './data/wear/processed/combined_features/30fps/{}_frames_{}_stride'.format(frames, stride)
-anno_folder = './data/wear/annotations/30fps'
+combined_folder = './data/wear/processed/combined_features/{}_frames_{}_stride'.format(frames, stride)
+anno_folder = './data/wear/annotations'
 
 # fixed dataset properties
 nb_sbjs = 18
-fps = 30
-sampling_rate = 25
+fps = 60
+sampling_rate = 50
 
 for i, split_sbjs in enumerate(sbjs):
     wear_annotations = {'version': 'Wear', 'database': {}, 'label_dict': label_dict}
