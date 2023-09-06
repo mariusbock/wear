@@ -459,25 +459,25 @@ class TriDet(nn.Module):
         # fpn_masks: F list[B, 1, T_i] -> F List[B, T_i]
         fpn_masks = [x.squeeze(1) for x in fpn_masks]
 
-        # return loss during training
+        # generate segment/lable List[N x 2] / List[N] with length = B
+        assert video_list[0]['segments'] is not None, "GT action labels does not exist"
+        assert video_list[0]['labels'] is not None, "GT action labels does not exist"
+        gt_segments = [x['segments'].to(self.device) for x in video_list]
+        gt_labels = [x['labels'].to(self.device) for x in video_list]
+
+        # compute the gt labels for cls & reg
+        # list of prediction targets
+        gt_cls_labels, gt_offsets = self.label_points(points, gt_segments, gt_labels)
+        
+        # compute the loss and return
+        losses = self.losses(
+            fpn_masks,
+            out_cls_logits, out_offsets,
+            gt_cls_labels, gt_offsets,
+            out_lb_logits, out_rb_logits,
+        )
+        
         if self.training:
-            # generate segment/lable List[N x 2] / List[N] with length = B
-            assert video_list[0]['segments'] is not None, "GT action labels does not exist"
-            assert video_list[0]['labels'] is not None, "GT action labels does not exist"
-            gt_segments = [x['segments'].to(self.device) for x in video_list]
-            gt_labels = [x['labels'].to(self.device) for x in video_list]
-
-            # compute the gt labels for cls & reg
-            # list of prediction targets
-            gt_cls_labels, gt_offsets = self.label_points(points, gt_segments, gt_labels)
-
-            # compute the loss and return
-            losses = self.losses(
-                fpn_masks,
-                out_cls_logits, out_offsets,
-                gt_cls_labels, gt_offsets,
-                out_lb_logits, out_rb_logits,
-            )
             return losses
         else:
             # decode the actions (sigmoid / stride, etc)
@@ -486,7 +486,7 @@ class TriDet(nn.Module):
                 out_cls_logits, out_offsets,
                 out_lb_logits, out_rb_logits,
             )
-            return results
+            return losses, results
 
     @torch.no_grad()
     def preprocessing(self, video_list, padding_val=0.0):
