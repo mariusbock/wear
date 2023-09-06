@@ -424,6 +424,52 @@ class TriDet(nn.Module):
             decoded_offset_right = torch.matmul(pred_right_dis, right_range_idx)
             return torch.cat([decoded_offset_left, decoded_offset_right], dim=-1)
 
+    def decode_offset_loss(self, out_offsets, pred_start_neighbours, pred_end_neighbours):
+        # decode the offset value from the network output
+        # If a normal regression head is used, the offsets is predicted directly in the out_offsets.
+        # If the Trident-head is used, the predicted offset is calculated using the value from
+        # center offset head (out_offsets), start boundary head (pred_left) and end boundary head (pred_right)
+
+        if not self.use_trident_head:
+            if self.training:
+                out_offsets = torch.cat(out_offsets, dim=1)
+            return out_offsets
+
+        else:
+            # Make an adaption for train and validation, when training, the out_offsets is a list with feature outputs
+            # from each FPN level. Each feature with shape [batchsize, T_level, (Num_bin+1)x2].
+            # For validation, the out_offsets is a feature with shape [T_level, (Num_bin+1)x2]
+            if self.training:
+                out_offsets = torch.cat(out_offsets, dim=1)
+                out_offsets = out_offsets.view(out_offsets.shape[:2] + (2, -1))
+                pred_start_neighbours = torch.cat(pred_start_neighbours, dim=1)
+                pred_end_neighbours = torch.cat(pred_end_neighbours, dim=1)
+                pred_left_dis = torch.softmax(pred_start_neighbours + out_offsets[:, :, :1, :], dim=-1)
+                pred_right_dis = torch.softmax(pred_end_neighbours + out_offsets[:, :, 1:, :], dim=-1)
+
+            else:
+                out_offsets = torch.cat(out_offsets, dim=1)
+                out_offsets = out_offsets.view(out_offsets.shape[:2] + (2, -1))
+                pred_start_neighbours = torch.cat(pred_start_neighbours, dim=1)
+                pred_end_neighbours = torch.cat(pred_end_neighbours, dim=1)
+                pred_left_dis = torch.softmax(pred_start_neighbours + out_offsets[:, :, :1, :], dim=-1)
+                pred_right_dis = torch.softmax(pred_end_neighbours + out_offsets[:, :, 1:, :], dim=-1)
+            
+            max_range_num = pred_left_dis.shape[-1]
+
+            left_range_idx = torch.arange(max_range_num - 1, -1, -1, device=pred_start_neighbours.device,
+                                          dtype=torch.float).unsqueeze(-1)
+            right_range_idx = torch.arange(max_range_num, device=pred_end_neighbours.device,
+                                           dtype=torch.float).unsqueeze(-1)
+
+            pred_left_dis = pred_left_dis.masked_fill(torch.isnan(pred_right_dis), 0)
+            pred_right_dis = pred_right_dis.masked_fill(torch.isnan(pred_right_dis), 0)
+
+            # calculate the value of expectation for the offset:
+            decoded_offset_left = torch.matmul(pred_left_dis, left_range_idx)
+            decoded_offset_right = torch.matmul(pred_right_dis, right_range_idx)
+            return torch.cat([decoded_offset_left, decoded_offset_right], dim=-1)
+    
     def forward(self, video_list):
         # batch the video list into feats (B, C, T) and masks (B, 1, T)
         batched_inputs, batched_masks = self.preprocessing(video_list)
@@ -671,7 +717,7 @@ class TriDet(nn.Module):
         gt_cls = torch.stack(gt_cls_labels)
         pos_mask = torch.logical_and((gt_cls.sum(-1) > 0), valid_mask)
 
-        decoded_offsets = self.decode_offset(out_offsets, out_start_logits, out_end_logits)  # bz, stack_T, num_class, 2
+        decoded_offsets = self.decode_offset_loss(out_offsets, out_start_logits, out_end_logits)  # bz, stack_T, num_class, 2
         decoded_offsets = decoded_offsets[pos_mask]
 
         if self.use_trident_head:
