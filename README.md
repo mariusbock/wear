@@ -54,7 +54,7 @@ Marius Bock (marius.bock@uni-siegen.de)
 ## Cite as
 ```
 @article{bock2023wear,
-  title={WEAR: An Outdoor Sports for Wearable and Egocentric Video Activity Recognition},
+  title={WEAR: An Outdoor Sports for Wearable and Egocentric Activity Recognition},
   author={Bock, Marius and Kuehne, Hilde and Van Laerhoven, Kristof and Moeller, Michael},
   volume={abs/2304.05088},
   journal={CoRR},
