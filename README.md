@@ -1,6 +1,6 @@
 # WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition
 
-<img src="teaser.gif" width="100%"/>
+<video loop src="docs/static/videos/banner_video-mp4_large.mp4" width="100%"/>
 
 [![arXiv](https://img.shields.io/badge/arXiv-2304.05088-b31b1b.svg)](https://arxiv.org/abs/2304.05088)
 [![CC BY-NC-SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
