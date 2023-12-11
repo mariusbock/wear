@@ -42,7 +42,7 @@ def main(args):
     config['devices'] = [args.gpu]
 
     ts = datetime.datetime.fromtimestamp(int(time.time()))
-    log_dir = os.path.join('logs', config['name'], str(ts))
+    log_dir = os.path.join('logs', config['name'], str(ts) + '_' + args.run_id)
     sys.stdout = Logger(os.path.join(log_dir, 'log.txt'))
 
     # save the current cfg
@@ -172,7 +172,8 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='./configs/60_frames_30_stride/tridet_combined.yaml')
     parser.add_argument('--eval_type', default='split')
-    parser.add_argument('--neptune', default=False, type=bool) 
+    parser.add_argument('--neptune', default=False, type=bool)
+    parser.add_argument('--run_id', default='test', type=str)
     parser.add_argument('--seed', default=42, type=int)       
     parser.add_argument('--ckpt-freq', default=-1, type=int)
     parser.add_argument('--resume', default='', type=str)

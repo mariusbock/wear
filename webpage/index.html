@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <!-- Meta tags for social media banners, these should be filled in appropriatly as they are your "business card" -->
+  <!-- Replace the content tag with appropriate information -->
+  <meta name="description" content="WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition">
+  <meta property="og:title" content="WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition"/>
+  <meta property="og:description" content="WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition"/>
+  <meta property="og:url" content="https://mariusbock.github.io/wear/"/>
+  <!-- Path to banner image, should be in the path listed below. Optimal dimenssions are 1200X630-->
+  <meta property="og:image" content="static/image/banner.pdf" />
+  <meta property="og:image:width" content="1200"/>
+  <meta property="og:image:height" content="630"/>
+  <!-- Keywords for your paper to be indexed by-->
+  <meta name="keywords" content="datasets; human activity recognition; temporal action localization; wearable activity recognition">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+  <title>WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition</title>
+  <link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+  rel="stylesheet">
+
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="static/css/index.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+  <script defer src="static/js/fontawesome.all.min.js"></script>
+  <script src="static/js/bulma-carousel.min.js"></script>
+  <script src="static/js/bulma-slider.min.js"></script>
+  <script src="static/js/index.js"></script>
+</head>
+<body>
+
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">WEAR: <br> An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition</h1>
+            <div class="is-size-5 publication-authors">
+              <!-- Paper authors -->
+              <span class="author-block">
+                <a href="https://mariusbock.github.io" target="_blank">Marius Bock</a><sup>*</sup>,</span>
+                <span class="author-block">
+                  <a href="https://hildekuehne.github.io" target="_blank">Hilde Kuehne</a><sup>&dagger;</sup>,</span>
+                  <span class="author-block">
+                    <a href="https://ubicomp.eti.uni-siegen.de/home/team/kristof.html.en?lang=en" target="_blank">Kristof Van Laerhoven</a><sup>*</sup>,
+                  </span>
+                  <span class="author-block">
+                    <a href="https://sites.google.com/site/michaelmoellermath" target="_blank">Michael Moeller</a><sup>*</sup>
+                  </span>
+                  </div>
+
+                  <div class="is-size-5 publication-authors">
+                    <span class="author-block"><sup>*</sup>University of Siegen, <sup>&dagger;</sup>University of Bonn<br>In review, 2023</span>
+                  </div>
+
+                  <div class="column has-text-centered">
+                    <div class="publication-links">
+                         <!-- Arxiv PDF link -->
+                      <span class="link-block">
+                        <a href="https://arxiv.org/abs/2304.05088" target="_blank"
+                        class="external-link button is-normal is-rounded is-dark">
+                        <span class="icon">
+                          <i class="fas fa-file-pdf"></i>
+                        </span>
+                        <span>Paper</span>
+                      </a>
+                    </span>
+
+                  <!-- Github link -->
+                  <span class="link-block">
+                    <a href="https://github.com/mariusbock/wear" target="_blank"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+
+                <!-- ArXiv abstract Link -->
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2304.05088" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+				
+                <!-- Dataset Link -->
+                <span class="link-block">
+                  <a href="https://bit.ly/wear_dataset" target="_blank"
+                  class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                    <i class="fa fa-database"></i>
+                  </span>
+                  <span>Dataset</span>
+                </a>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<video autoplay loop muted width="100%" height="auto" src="static/videos/banner_video-mp4_large.mp4"></video>
+
+<!-- Paper abstract --> 
+<section class="section hero is-small"> 
+	<div class="container is-max-desktop"> 	
+		<div class="columns is-centered has-text-justified"> 
+			<div class="column is-four-fifths"> 
+				<h2 class="title is-3">Abstract</h2> <div class="content has-text-justified"> 
+					<p> Though research has shown the complementarity of camera- and inertial-based data, datasets which offer both egocentric video and inertial-based sensor data remain scarce. In this paper, we introduce WEAR, an outdoor sports dataset for both vision- and inertial-based human activity recognition (HAR). The dataset comprises data from 18 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and camera (egocentric video) data recorded at 10 different outside locations. Unlike previous egocentric datasets, WEAR provides a challenging prediction scenario marked by purposely introduced activity variations as well as an overall small information overlap across modalities. Benchmark results obtained using each modality separately show that each modality interestingly offers complementary strengths and weaknesses in their prediction performance. Further, in light of the recent success of temporal action localization models following the architecture design of the ActionFormer, we demonstrate their versatility by applying them in a plain fashion using vision, inertial and combined (vision + inertial) features as input. Results demonstrate both the applicability of vision-based temporal action localization models for inertial data and fusing both modalities by means of simple concatenation, with the combined approach (vision + inertial features) being able to produce the highest mean average precision and close-to-best F1-score. 
+					</p> 
+				</div> 
+			</div> 
+		</div> 
+	</div>
+</section>
+<!-- End paper abstract -->
+
+<!-- Sensors --> 
+<section class="section hero is-light"> 
+	<div class="container"> 	
+		<div class="columns has-text-left is-four-fifths"> 
+			<div class="column"> 
+				<h2 class="title is-3">The Sensors</h2> <div class="content has-text-justified"> 
+					<p> 
+					We provide subject-wise raw and processed acceleration and egocentric-video data. 3D-accelerometer data (50Hz±8g) was collected using four open-source <a href="https://banglejs.com">Bangle.js smartwatches</a> running a custom, <a href="https://github.com/kristofvl/BangleApps">open-source firmware</a>. The watches and were placed in a fixed orientation on the left and right wrists and ankles of each participant (see Figure below). Egocentric video data (1080p@60FPS) was captured using a <a href="https://gopro.com/">GoPro Hero 8 action camera</a>, which was mounted using a head strap on each participant's head. The camera was tilted downwards in a 45 degree angle during recording. </br>
+					
+				</br>
+					<div class="columns is-centered has-text-left"> 
+						<image is-centered loop muted width="80%" height="auto" src="static/images/banner.pdf"></video>
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		
+	</div>
+		
+</section>
+<!-- End Sensors -->
+
+<!-- Activities --> 
+<section class="section hero is-small"> 
+	<div class="container"> 	
+		<div class="columns has-text-left is-four-fifths"> 
+			<div class="column"> 
+				<h2 class="title is-3">The Activities</h2> <div class="content has-text-justified"> 
+					<p> 
+					Each participant performed a set of 18 workout activities. These activities include running-, stretching- and strength-based exercises, with base activities like push-ups being complemented with complex variations that alter and/ or extend the performed movement during the exercise. Activities were divided across multiple recording sessions, with each session consisting of uninterrupted data streams of all modalities. Each participant was tasked to perform each exercise for at least 90 seconds, but had the freedom to choose the order of activities and take breaks as desired. 
+					</p>
+				</br>
+					<div class="columns is-centered has-text-left"> 
+						<video autoplay is-centered loop muted width="100%" height="auto" src="static/videos/mosaic_vertical_static-crop.mp4"></video>
+					</div> 
+				</div> 
+			</div> 
+		</div> 
+		
+	</div>
+		
+</section>
+<!-- End activities -->
+
+<!-- Other --> 
+<section class="section hero is-small"> 
+	<div class="container is-four-fifths"> 	
+		<div class="columns has-text-left"> 
+			<div class="column"> 
+				<h2 class="title is-3">Download</h2> <div class="content has-text-justified"> 
+				<p>
+					The full dataset can be downloaded <a href="https://bit.ly/wear_dataset">this link</a>. The download folder is divided into 3 subdirectories
+					<ul>
+						<li><i>annotations (> 1MB)</i>: JSON-files containing annotations per-subject using the THUMOS14-style</li>
+						<li><i>processed (15GB)</i>: precomputed I3D, inertial and combined per-subject features</li>
+						<li><i>raw (130GB)</i>: Raw, per-subject video and inertial data</li>
+					</ul>
+					
+				<h2 class="title is-3">Reproduce Benchmarks</h2> <div class="content has-text-justified"> 
+					<p>
+						In order to reproduce any experiments mentioned in the paper, please refer to the instructions provided in the <a href="https://github.com/mariusbock/wear">GitHub repository</a>.
+					</p>
+				
+				<h2 class="title is-3">How to contribute</h2> <div class="content has-text-justified"> 
+					<p> 
+					If you want to contribute to the WEAR dataset and check out our <a href="https://github.com/mariusbock/wear/tree/main/data_creation">How-To: Record your own data</a> guide or get in touch with us via <a href="mailto:marius.bock@uni-siegen.de">marius.bock@uni-siegen.de</a>. 
+					</p>
+					
+					
+					<h2 class="title is-3">License</h2> <div class="content has-text-justified"> 
+					<p>
+						WEAR is offered under a
+						<a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>. You are free to use, copy, and redistribute the material for non-commercial purposes provided you give appropriate credit, provide a link to the license, and indicate if changes were made. If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original. You may not use the material for commercial purposes.
+					</p>
+					
+
+					<h2 class="title is-3">Contact</h2> <div class="content has-text-justified"> 
+					Marius Bock (<a href="mailto:marius.bock@uni-siegen.de">marius.bock@uni-siegen.de</a>)
+
+				</div> 
+			</div> 
+		</div> 
+	</div>
+</section>
+<!-- End Other -->
+
+
+<!--BibTex citation -->
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">Cite as</h2>
+      <pre><code>@article{bock2023wear,
+  title={WEAR: An Outdoor Sports for Wearable and Egocentric Activity Recognition},
+  author={Bock, Marius and Kuehne, Hilde and Van Laerhoven, Kristof and Moeller, Michael},
+  volume={abs/2304.05088},
+  journal={CoRR},
+  year={2023},
+  url={https://arxiv.org/abs/2304.05088}
+}</code></pre>
+    </div>
+</section>
+<!--End BibTex citation -->
+
+
+  <footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+
+          <p>
+            This page was built using the <a href="https://github.com/eliahuhorwitz/Academic-project-page-template" target="_blank">Academic Project Page Template</a>.
+          </p>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+  
+<!-- Default Statcounter code for WEAR
+https://mariusbock.github.io/wear/ -->
+<script type="text/javascript">
+var sc_project=12899566; 
+var sc_invisible=1; 
+var sc_security="99f241ec"; 
+</script>
+<script type="text/javascript"
+src="https://www.statcounter.com/counter/counter.js"
+async></script>
+<noscript><div class="statcounter"><a title="Web Analytics"
+href="https://statcounter.com/" target="_blank"><img
+class="statcounter"
+src="https://c.statcounter.com/12899566/0/99f241ec/1/"
+alt="Web Analytics"
+referrerPolicy="no-referrer-when-downgrade"></a></div></noscript>
+<!-- End of Statcounter Code -->
+
+  </body>
+  </html>

@@ -89,7 +89,7 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
         net, t_losses, _, _ = train_one_epoch(train_loader, net, opt, criterion, cfg['devices'][0])
 
         # save ckpt once in a while
-        if (((epoch + 1) == cfg['train_cfg']['epochs']) or ((ckpt_freq > 0) and ((epoch + 1) % ckpt_freq == 0))):
+        if (((ckpt_freq > 0) and ((epoch + 1) % ckpt_freq == 0))):
             save_states = { 
                 'epoch': epoch + 1,
                 'state_dict': net.state_dict(),

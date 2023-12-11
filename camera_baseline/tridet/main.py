@@ -95,7 +95,7 @@ def run_tridet(val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generator, run
         t_loss = train_one_epoch(train_loader, model, optimizer, scheduler, model_ema, cfg['train_cfg']['clip_grad_l2norm'])
 
         # save ckpt once in a while
-        if (((epoch + 1) == max_epochs) or ((ckpt_freq > 0) and ((epoch + 1) % ckpt_freq == 0))):
+        if (((ckpt_freq > 0) and ((epoch + 1) % ckpt_freq == 0))):
             save_states = {
                 'epoch': epoch + 1,
                 'state_dict': model.state_dict(),
