@@ -183,10 +183,9 @@
 			<div class="content has-text-justified"> 
 				<p>
 					<ul>
-						<li><b>Training Data</b>: Original WEAR dataset [raw inertial only; 600 MB] (<a href="https://uni-siegen.sciebo.de/s/DCI8EJlgWw49dPV">download</a>)</li>
-						<li><b>Test Data</b>: <i>to be released</i></li>
+						<li><b>Training Data</b>:  <a href="https://uni-siegen.sciebo.de/s/BZV1XwxrYv61Ytk">download [approx. 600 MB]</a></li>
+						<li><b>Test Data</b>:  <a href="https://uni-siegen.sciebo.de/s/79eim5jOzRBlgFP">download  [approx. 150 MB]</a></li>
 					</ul>
-					<b>Information on the Test Dataset:</b> The test dataset + a sample submission file will be released by June 3rd. The test dataset will consist of both new participants and additional sessions of three participants which are also part of the train dataset.
 				</p>
 			</div>
 			<!-- End Downloads -->
@@ -205,9 +204,9 @@
 			<div class="content has-text-justified"> 
 
 			<h3>Submission of Final Predictions:</h3>
-				To submit your final predictions of the test dataset, please send a plain CSV file “{Your_Team_Name}.csv" (or a download link to it) to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>. The CSV should contain the recordwise predicted labels of the test dataset. Note that we will assume the same label names as in the train and the same ordering as in the test dataset - thus make sure to keep the order of the records and use the same label names as in the training data. 
+				To submit your final predictions of the test dataset, please send a plain CSV file “{Your_Team_Name}.csv" (or a download link to it) to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>. The CSV should contain the recordwise predicted labels of the concatenated test dataset (i.e. concatenation of the 6 test participants). Note that we will assume the same label names as in the train and the same ordering as in the test dataset - thus make sure to keep the order of the records and use the same label names as in the training data. 
 				
-				An example of submission will be made available once the test dataset is released. 
+				An example of submission (with random labels) can be <a href="https://uni-siegen.sciebo.de/s/yvtaZpqqia10zsZ">downloaded here</a>. 
 			<h3>Submission of Technical Report:</h3>
 
 			Submission of the technical report will happen via <a href="https://new.precisionconference.com/submissions">PCS</a> <i>(select SIGCHI / UbiComp 2024 / UbiComp 2024 Workshop - HASCA-WEAR)</i>. Your technical report should detail your solution as well as provide preliminary results you achieved on the train dataset. ACM requires UbiComp/ISWC 2024 workshop submissions to use the double-column template. Your technical report must be between 3 to 6 pages including references. Submissions do not need to be anonymous. For details on the template please refer to the <a href="https://www.ubicomp.org/ubicomp-iswc-2024/authors/formatting/">UbiComp/ISWC website</a>.
@@ -252,7 +251,17 @@
 					</p>
 					
 					<h3>Testing Data</h3> 
-					<b>DETAILS COMING SOON!</b>
+					The test dataset follows the same structure as the training data. In total the test dataset consists of 6 new and existing participants performing the same 18 activities as the original participants. The test dataset is divided into multiple CSV files, each containing the sensor data of one participant.
+
+					Participants of the test dataset are:
+					<ul>
+						<li><b>sbj_0_2 (112050 records):</b> additional session of participant with id 0 from the original dataset.</li>
+						<li><b>sbj_14_2 (167750 records):</b> additional session of participant with id 14 from the original dataset.</li>
+						<li><b>sbj_18 (131600 records):</b> session of a new participant (id 18).</li>
+						<li><b>sbj_19 (110050 records):</b> session of a new participant (id 19).</li>
+						<li><b>sbj_20 (95400 records):</b> session of a new participant (id 20).</li>
+						<li><b>sbj_21 (127800 records):</b> session of a new participant (id 21).</li>
+					</ul>
 					
 				</p>
 			</div>
