@@ -336,10 +336,13 @@ def valid_one_epoch(val_loader, model):
                 # update
                 losses_tracker[key].update(value.item())
                 
-    # gather all stats and evaluate
-    results['t-start'] = torch.cat(results['t-start']).numpy()
-    results['t-end'] = torch.cat(results['t-end']).numpy()
-    results['label'] = torch.cat(results['label']).numpy()
-    results['score'] = torch.cat(results['score']).numpy()
+     # gather all stats and evaluate
+    try:
+        results['t-start'] = torch.cat(results['t-start']).numpy()
+        results['t-end'] = torch.cat(results['t-end']).numpy()
+        results['label'] = torch.cat(results['label']).numpy()
+        results['score'] = torch.cat(results['score']).numpy()
+    except:
+        pass
 
     return losses_tracker['final_loss'].avg, results

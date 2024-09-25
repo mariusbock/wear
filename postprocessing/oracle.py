@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import os
 import json
 from matplotlib import pyplot as plt
@@ -9,23 +12,41 @@ from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_
 from utils import majorityVoting, combine_predictions, convert_samples_to_segments, convert_segments_to_samples, ANETdetection
 
 
-path_to_inertial = 'path/to/best/inertial/model'
-path_to_camera = 'path/to/best/camera/model'
+path_to_inertial = 'experiments/main_experiments/inertial/aandd/30_frames_15_stride'
+path_to_camera = 'experiments/main_experiments/camera/tridet/30_frames_15_stride'
+combined = True
+path_to_combined = 'experiments/main_experiments/combined/tridet/30_frames_15_stride'
 seeds = [1, 2, 3]
-majority_filter = 751
-score_threshold = 0.2
+majority_filter = 501
+score_threshold = 0.1
 sampling_rate = 50
+nb_classes = 19
 json_files = [
-    'data/wear/annotations/wear_split_1.json', 
-    'data/wear/annotations/wear_split_2.json', 
-    'data/wear/annotations/wear_split_3.json'
+    'data/wear/annotations/60fps/wear_split_1.json', 
+    'data/wear/annotations/60fps/wear_split_2.json', 
+    'data/wear/annotations/60fps/wear_split_3.json',
+    'data/wear/annotations/60fps/wear_split_4.json', 
+    'data/wear/annotations/60fps/wear_split_5.json', 
+    'data/wear/annotations/60fps/wear_split_6.json',
+    'data/wear/annotations/60fps/wear_split_7.json', 
+    'data/wear/annotations/60fps/wear_split_8.json', 
+    'data/wear/annotations/60fps/wear_split_9.json',
+    'data/wear/annotations/60fps/wear_split_10.json', 
+    'data/wear/annotations/60fps/wear_split_11.json', 
+    'data/wear/annotations/60fps/wear_split_12.json',
+    'data/wear/annotations/60fps/wear_split_13.json', 
+    'data/wear/annotations/60fps/wear_split_14.json', 
+    'data/wear/annotations/60fps/wear_split_15.json',
+    'data/wear/annotations/60fps/wear_split_16.json',
+    'data/wear/annotations/60fps/wear_split_17.json',
+    'data/wear/annotations/60fps/wear_split_18.json',
     ]
 
 print("Data Loading....")
 all_mAP = np.zeros((len(seeds), 5))
-all_recall = np.zeros((len(seeds), 19))
-all_prec = np.zeros((len(seeds), 19))
-all_f1 = np.zeros((len(seeds), 19))
+all_recall = np.zeros((len(seeds), nb_classes))
+all_prec = np.zeros((len(seeds), nb_classes))
+all_f1 = np.zeros((len(seeds), nb_classes))
 for s_pos, seed in enumerate(seeds):
     all_preds = np.array([])
     all_gt = np.array([])
@@ -40,7 +61,7 @@ for s_pos, seed in enumerate(seeds):
                 
         v_data = np.empty((0, 12 + 2))
         for sbj in val_sbjs:
-            data = pd.read_csv(os.path.join('data/wear/raw/inertial', sbj + '.csv'), index_col=False).replace({"label": label_dict}).fillna(0).to_numpy()
+            data = pd.read_csv(os.path.join('data/wear/raw/inertial/{}hz'.format(sampling_rate), sbj + '.csv'), index_col=False).replace({"label": label_dict}).fillna(0).to_numpy()
             v_data = np.append(v_data, data, axis=0)
 
         preds_inertial = np.array([])
@@ -56,17 +77,23 @@ for s_pos, seed in enumerate(seeds):
         v_seg_camera = v_seg_camera.rename(columns={"video_id": "video-id", "t_start": "t-start", "t_end": "t-end"})
         preds_camera, gt, _ = convert_segments_to_samples(v_seg_camera, v_data, sampling_rate, threshold=score_threshold)
         preds = combine_predictions(preds_inertial, preds_camera, gt)
+        if combined:
+            v_seg_combined = pd.read_csv(os.path.join(path_to_combined, 'seed_' + str(seed), 'unprocessed_results/v_seg_wear_split_{}.csv'.format(int(i) + 1, seed)), index_col=None)
+            v_seg_combined = v_seg_combined.rename(columns={"video_id": "video-id", "t_start": "t-start", "t_end": "t-end"})
+            preds_combined, gt, _ = convert_segments_to_samples(v_seg_combined, v_data, sampling_rate, threshold=score_threshold)
+            preds = combine_predictions(preds, preds_combined, gt)
         v_seg = convert_samples_to_segments(v_data[:, 0], preds, sampling_rate)
         all_preds = np.concatenate((all_preds, preds))
         all_gt = np.concatenate((all_gt, gt))
+        labels = range(nb_classes)
 
         det_eval = ANETdetection(j, 'validation', tiou_thresholds = [0.3, 0.4, 0.5, 0.6, 0.7])
                         
         print("Evaluating {}....".format(j))
         v_mAP, _ = det_eval.evaluate(v_seg)
-        v_prec = precision_score(gt, preds, average=None)
-        v_rec = recall_score(gt, preds, average=None)
-        v_f1 = f1_score(gt, preds, average=None)
+        v_prec = precision_score(gt, preds, average=None, labels=labels)
+        v_rec = recall_score(gt, preds, average=None, labels=labels)
+        v_f1 = f1_score(gt, preds, average=None, labels=labels)
 
         all_prec[s_pos, :] += v_prec
         all_recall[s_pos, :] += v_rec
@@ -89,20 +116,11 @@ print(np.around(np.mean(all_mAP, axis=0) / len(json_files), 4) * 100)
 print("Average mAP:")
 print("{:.4} (+/-{:.4})".format(np.mean(all_mAP) / len(json_files) * 100, np.std(np.mean(all_mAP, axis=1) / len(json_files)) * 100))
 
-print("Individual Precision:")
-print(np.around(np.mean(all_prec, axis=0) / len(json_files), 4) * 100)
-
 print("Average Precision:")
 print("{:.4} (+/-{:.4})".format(np.mean(all_prec) / len(json_files) * 100, np.std(np.mean(all_prec, axis=1) / len(json_files)) * 100))
 
-print("Individual Recall:")
-print(np.around(np.mean(all_recall, axis=0) / len(json_files), 4) * 100)
-
 print("Average Recall:")
 print("{:.4} (+/-{:.4})".format(np.mean(all_recall) / len(json_files) * 100, np.std(np.mean(all_recall, axis=1) / len(json_files)) * 100))
-
-print("Individual F1:")
-print(np.around(np.mean(all_f1, axis=0) / len(json_files), 4) * 100)
 
 print("Average F1:")
 print("{:.4} (+/-{:.4})".format(np.mean(all_f1) / len(json_files) * 100, np.std(np.mean(all_f1, axis=1) / len(json_files)) * 100))

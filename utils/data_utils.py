@@ -135,13 +135,19 @@ def convert_samples_to_segments(ids, labels, sampling_rate):
     }
 
 def convert_segments_to_samples(segments, sens, sampling_rate, threshold_type='score', threshold=0.0):
-    segments_df = pd.DataFrame({
-        'video_id' : segments['video-id'],
-        't_start' : segments['t-start'].tolist(),
-        't_end': segments['t-end'].tolist(),
-        'label': segments['label'].tolist(),
-        'score': segments['score'].tolist()
-        })
+    if isinstance(segments, pd.DataFrame):
+        segments_df = segments
+    else:
+        try:
+            segments_df = pd.DataFrame({
+                'video_id' : segments['video-id'],
+                't_start' : segments['t-start'].tolist(),
+                't_end': segments['t-end'].tolist(),
+                'label': segments['label'].tolist(),
+                'score': segments['score'].tolist()
+                })
+        except:
+            segments_df = pd.DataFrame(columns=['video_id', 't_start', 't_end', 'label', 'score'])
     preds = np.array([])
     gt = np.array([])
     scores = np.array([])

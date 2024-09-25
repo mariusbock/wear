@@ -6,6 +6,7 @@
 # ------------------------------------------------------------------------
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
+warnings.simplefilter(action='ignore', category=FutureWarning)
 import argparse
 import datetime
 import json
@@ -14,6 +15,7 @@ from pprint import pprint
 import sys
 import time
 
+import torch
 import pandas as pd
 import numpy as np
 import neptune
@@ -39,10 +41,15 @@ def main(args):
 
     config = load_config(args.config)
     config['init_rand_seed'] = args.seed
-    config['devices'] = [args.gpu]
+    config['device'] = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
+    if args.neptune:
+        run_id = run["sys/id"].fetch()
+    else:
+        run_id = args.run_id
+    
     ts = datetime.datetime.fromtimestamp(int(time.time()))
-    log_dir = os.path.join('logs', config['name'], str(ts) + '_' + args.run_id)
+    log_dir = os.path.join('logs', config['name'], str(ts) + '_' + run_id)
     sys.stdout = Logger(os.path.join(log_dir, 'log.txt'))
 
     # save the current cfg
@@ -51,7 +58,6 @@ def main(args):
         fid.flush()
     
     if args.neptune:
-        run['eval_type'] = args.eval_type
         run['config_name'] = args.config
         run['config'].upload(os.path.join(log_dir, 'cfg.txt'))
 
@@ -71,16 +77,13 @@ def main(args):
         val_sbjs = [x for x in anno_file if anno_file[x]['subset'] == 'Validation']
 
         print('Split {} / {}'.format(i + 1, len(config['anno_json'])))
-        if args.eval_type == 'split':
-            name = 'split_' + str(i)
-        elif args.eval_type == 'loso':
-            name = 'sbj_' + str(i)
+        name = 'sbj_' + str(i)
         config['dataset']['json_anno'] = anno_split
         if config['name'] == 'tadtr':
             config['dataset']['json_info'] = config['info_json'][i]
 
         if config['name'] == 'deepconvlstm' or config['name'] == 'attendanddiscriminate':
-            t_losses, v_losses, v_mAP, v_preds, v_gt = run_inertial_network(train_sbjs, val_sbjs, config, log_dir, args.ckpt_freq, args.resume, rng_generator, run)
+            t_losses, v_losses, v_mAP, v_preds, v_gt = run_inertial_network(train_sbjs, val_sbjs, config, log_dir, args.ckpt_freq, args.resume, rng_generator, run, args.val_freq)
         elif config['name'] == 'actionformer':
             t_losses, v_losses, v_mAP, v_preds, v_gt = run_actionformer(val_sbjs, config, log_dir, args.ckpt_freq, args.resume, rng_generator, run)
         elif config['name'] == 'tridet':
@@ -94,10 +97,7 @@ def main(args):
         v_f1 = f1_score(v_gt, v_preds, average=None, zero_division=1, labels=range(len(config['labels'])))
 
         # print to terminal
-        if args.eval_type == 'split':
-            block1 = '\nFINAL RESULTS SPLIT {}'.format(i + 1)
-        elif args.eval_type == 'loso':
-            block1 = '\nFINAL RESULTS SUBJECT {}'.format(i)
+        block1 = '\nFINAL RESULTS SUBJECT {}'.format(i)
         block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.nanmean(t_losses))
         block3 = 'VALIDATION:\tavg. loss {:.2f}'.format(np.nanmean(v_losses))
         block4 = ''
@@ -171,13 +171,13 @@ def main(args):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--config', default='./configs/60_frames_30_stride/tridet_combined.yaml')
-    parser.add_argument('--eval_type', default='split')
+    parser.add_argument('--run_id', default='', type=str)
     parser.add_argument('--neptune', default=False, type=bool)
-    parser.add_argument('--run_id', default='test', type=str)
-    parser.add_argument('--seed', default=42, type=int)       
+    parser.add_argument('--seed', default=1, type=int)       
     parser.add_argument('--ckpt-freq', default=-1, type=int)
     parser.add_argument('--resume', default='', type=str)
     parser.add_argument('--gpu', default='cuda:0', type=str)
+    parser.add_argument('--val_freq', default=1, type=int)
     args = parser.parse_args()
     main(args)  
 

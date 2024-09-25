@@ -22,7 +22,7 @@ from inertial_baseline.DeepConvLSTM import DeepConvLSTM
 from camera_baseline.actionformer.libs.utils.metrics import ANETdetection
 
 
-def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generator, run):
+def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resume, rng_generator, run, val_freq):
     split_name = cfg['dataset']['json_anno'].split('/')[-1].split('.')[0]
     # load train and val inertial data
     train_data, val_data = np.empty((0, cfg['dataset']['input_dim'] + 2)), np.empty((0, cfg['dataset']['input_dim'] + 2))
@@ -98,61 +98,66 @@ def run_inertial_network(train_sbjs, val_sbjs, cfg, ckpt_folder, ckpt_freq, resu
 
             file_name = 'epoch_{:03d}_{}.pth.tar'.format(epoch + 1, split_name)
             save_checkpoint(save_states, False, file_folder=os.path.join(ckpt_folder, 'ckpts'), file_name=file_name)
-
-        # validation
-        v_losses, v_preds, v_gt = validate_one_epoch(test_loader, net, criterion, cfg['devices'][0])
-
-        if cfg['train_cfg']['lr_step'] > 0:
-            scheduler.step()
         
-        # use mAP calculation as in ActionFormer
-        det_eval = ANETdetection(cfg['dataset']['json_anno'], 'validation', tiou_thresholds = cfg['dataset']['tiou_thresholds'])
-        # undwindow inertial data (sample-wise structure instead of windowed) 
-        v_preds, v_gt = unwindow_inertial_data(val_data, test_dataset.ids, v_preds, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'])
-        # convert to samples (for mAP calculation)
-        v_segments = convert_samples_to_segments(val_data[:, 0], v_preds, cfg['dataset']['sampling_rate'])
+        if ((epoch + 1) % val_freq == 0):
+            # validation
+            v_losses, v_preds, v_gt = validate_one_epoch(test_loader, net, criterion, cfg['devices'][0])
 
-        if epoch == (start_epoch + cfg['train_cfg']['epochs']) - 1:
-            # save raw results (for later postprocessing)
-            v_results = pd.DataFrame({
-                'video_id' : v_segments['video-id'],
-                't_start' : v_segments['t-start'].tolist(),
-                't_end': v_segments['t-end'].tolist(),
-                'label': v_segments['label'].tolist(),
-                'score': v_segments['score'].tolist()
-            })
-            mkdir_if_missing(os.path.join(ckpt_folder, 'unprocessed_results'))
-            np.save(os.path.join(ckpt_folder, 'unprocessed_results', 'v_preds_' + split_name), v_preds)
-            np.save(os.path.join(ckpt_folder, 'unprocessed_results', 'v_gt_' + split_name), v_gt)
-            v_results.to_csv(os.path.join(ckpt_folder, 'unprocessed_results', 'v_seg_' + split_name + '.csv'), index=False)
+            if cfg['train_cfg']['lr_step'] > 0:
+                scheduler.step()
+            
+            # use mAP calculation as in ActionFormer
+            det_eval = ANETdetection(cfg['dataset']['json_anno'], 'validation', tiou_thresholds = cfg['dataset']['tiou_thresholds'])
+            # undwindow inertial data (sample-wise structure instead of windowed) 
+            v_preds, v_gt = unwindow_inertial_data(val_data, test_dataset.ids, v_preds, cfg['dataset']['window_size'], cfg['dataset']['window_overlap'])
+            # convert to samples (for mAP calculation)
+            v_segments = convert_samples_to_segments(val_data[:, 0], v_preds, cfg['dataset']['sampling_rate'])
 
-        # calculate validation metrics
-        v_mAP, _ = det_eval.evaluate(v_segments)
-        conf_mat = confusion_matrix(v_gt, v_preds, normalize='true')
-        v_acc = conf_mat.diagonal()/conf_mat.sum(axis=1)
-        v_prec = precision_score(v_gt, v_preds, average=None, zero_division=1)
-        v_rec = recall_score(v_gt, v_preds, average=None, zero_division=1)
-        v_f1 = f1_score(v_gt, v_preds, average=None, zero_division=1)
+            if epoch == (start_epoch + cfg['train_cfg']['epochs']) - 1:
+                # save raw results (for later postprocessing)
+                v_results = pd.DataFrame({
+                    'video_id' : v_segments['video-id'],
+                    't_start' : v_segments['t-start'].tolist(),
+                    't_end': v_segments['t-end'].tolist(),
+                    'label': v_segments['label'].tolist(),
+                    'score': v_segments['score'].tolist()
+                })
+                mkdir_if_missing(os.path.join(ckpt_folder, 'unprocessed_results'))
+                np.save(os.path.join(ckpt_folder, 'unprocessed_results', 'v_preds_' + split_name), v_preds)
+                np.save(os.path.join(ckpt_folder, 'unprocessed_results', 'v_gt_' + split_name), v_gt)
+                v_results.to_csv(os.path.join(ckpt_folder, 'unprocessed_results', 'v_seg_' + split_name + '.csv'), index=False)
 
-        # print results to terminal
-        block1 = 'Epoch: [{:03d}/{:03d}]'.format(epoch, cfg['train_cfg']['epochs'])
-        block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.nanmean(t_losses))
-        block3 = 'VALIDATION:\tavg. loss {:.2f}'.format(np.nanmean(v_losses))
-        block4 = ''
-        block4  += '\t\tAvg. mAP {:>4.2f} (%) '.format(np.nanmean(v_mAP) * 100)
-        for tiou, tiou_mAP in zip(cfg['dataset']['tiou_thresholds'], v_mAP):
-            block4 += 'mAP@' + str(tiou) +  ' {:>4.2f} (%) '.format(tiou_mAP*100)
-        block4  += '\n\t\tAcc {:>4.2f} (%)'.format(np.nanmean(v_acc) * 100)
-        block4  += ' Prec {:>4.2f} (%)'.format(np.nanmean(v_prec) * 100)
-        block4  += ' Rec {:>4.2f} (%)'.format(np.nanmean(v_rec) * 100)
-        block4  += ' F1 {:>4.2f} (%)'.format(np.nanmean(v_f1) * 100)
+            # calculate validation metrics
+            v_mAP, _ = det_eval.evaluate(v_segments)
+            conf_mat = confusion_matrix(v_gt, v_preds, normalize='true')
+            v_acc = conf_mat.diagonal()/conf_mat.sum(axis=1)
+            v_prec = precision_score(v_gt, v_preds, average=None, zero_division=1)
+            v_rec = recall_score(v_gt, v_preds, average=None, zero_division=1)
+            v_f1 = f1_score(v_gt, v_preds, average=None, zero_division=1)
 
-        print('\n'.join([block1, block2, block3, block4]))
-
-        if run is not None:
-            run[split_name].append({"train_loss": np.nanmean(t_losses), "val_loss": np.nanmean(v_losses), "accuracy": v_acc, "precision": np.nanmean(v_prec), "recall": np.nanmean(v_rec), 'f1': np.nanmean(v_f1), 'mAP': np.nanmean(v_mAP)}, step=epoch)
+            # print results to terminal
+            block1 = 'Epoch: [{:03d}/{:03d}]'.format(epoch, cfg['train_cfg']['epochs'])
+            block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.nanmean(t_losses))
+            block3 = 'VALIDATION:\tavg. loss {:.2f}'.format(np.nanmean(v_losses))
+            block4 = ''
+            block4  += '\t\tAvg. mAP {:>4.2f} (%) '.format(np.nanmean(v_mAP) * 100)
             for tiou, tiou_mAP in zip(cfg['dataset']['tiou_thresholds'], v_mAP):
-                run[split_name].append({'mAP@' + str(tiou): tiou_mAP}, step=epoch)    
+                block4 += 'mAP@' + str(tiou) +  ' {:>4.2f} (%) '.format(tiou_mAP*100)
+            block4  += '\n\t\tAcc {:>4.2f} (%)'.format(np.nanmean(v_acc) * 100)
+            block4  += ' Prec {:>4.2f} (%)'.format(np.nanmean(v_prec) * 100)
+            block4  += ' Rec {:>4.2f} (%)'.format(np.nanmean(v_rec) * 100)
+            block4  += ' F1 {:>4.2f} (%)'.format(np.nanmean(v_f1) * 100)
+
+            print('\n'.join([block1, block2, block3, block4]))
+
+            if run is not None:
+                run[split_name].append({"train_loss": np.nanmean(t_losses), "val_loss": np.nanmean(v_losses), "accuracy": np.nanmean(v_acc), "precision": np.nanmean(v_prec), "recall": np.nanmean(v_rec), 'f1': np.nanmean(v_f1), 'mAP': np.nanmean(v_mAP)}, step=epoch)
+                for tiou, tiou_mAP in zip(cfg['dataset']['tiou_thresholds'], v_mAP):
+                    run[split_name].append({'mAP@' + str(tiou): tiou_mAP}, step=epoch)  
+        else:
+            block1 = 'Epoch: [{:03d}/{:03d}]'.format(epoch, cfg['train_cfg']['epochs'])
+            block2 = 'TRAINING:\tavg. loss {:.2f}'.format(np.nanmean(t_losses))  
+            print('\n'.join([block1, block2]))
 
     return t_losses, v_losses, v_mAP, v_preds, v_gt
 

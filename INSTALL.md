@@ -13,10 +13,10 @@ conda create -n wear python==3.10.4
 conda activate wear
 ```
 
-Install PyTorch distribution:
+Install PyTorch distribution (we used version==2.3.1):
 
 ```
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 pytorch-cuda=11.7 -c pytorch -c nvidia
+conda install pytorch pytorch-cuda=12.1 -c pytorch -c nvidia
 ```
 
 Install other requirements:
@@ -24,7 +24,7 @@ Install other requirements:
 pip install -r requirements.txt
 ```
 
-Compile C++ distribution of NMS (used by Tridet and ActionFormer)
+Compile C++ distributions of NMS (used by ActionFormer, TemporalMaxer and Tridet)
 
 ```
 cd camera_baseline/actionformer/libs/utils

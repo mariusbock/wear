@@ -211,13 +211,16 @@ class ANETdetection(object):
         elif isinstance(preds, Dict):
             # move to pd dataframe
             # did not check dtype here, can accept both numpy / pytorch tensors
-            preds = pd.DataFrame({
+            try:
+                preds = pd.DataFrame({
                 'video-id' : preds['video-id'],
                 't-start' : preds['t-start'].tolist(),
                 't-end': preds['t-end'].tolist(),
                 'label': preds['label'].tolist(),
                 'score': preds['score'].tolist()
-            })
+                })
+            except:
+                preds = pd.DataFrame(columns=['video-id', 't-start', 't-end', 'label', 'score'])
             
         # always reset ap
         self.ap = None
@@ -306,8 +309,8 @@ def compute_average_precision_detection(
             if fp[tidx, idx] == 0 and tp[tidx, idx] == 0:
                 fp[tidx, idx] = 1
 
-    tp_cumsum = np.cumsum(tp, axis=1).astype(np.float)
-    fp_cumsum = np.cumsum(fp, axis=1).astype(np.float)
+    tp_cumsum = np.cumsum(tp, axis=1).astype(float)
+    fp_cumsum = np.cumsum(fp, axis=1).astype(float)
     recall_cumsum = tp_cumsum / npos
 
     precision_cumsum = tp_cumsum / (tp_cumsum + fp_cumsum)
