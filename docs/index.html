@@ -61,19 +61,19 @@
                   </div>
 
                   <div class="is-size-5 publication-authors">
-                    <span class="author-block"><sup>*</sup>University of Siegen, <sup>&dagger;</sup>University of Tuebingen<br>Accepted at IMWUT (Vol. 8), 2024</span>
+                    <span class="author-block"><sup>*</sup>University of Siegen, <sup>&dagger;</sup>University of Tuebingen<br>To be published in IMWUT (Vol. 8), 2024</span>
                   </div>
 
                   <div class="column has-text-centered">
                     <div class="publication-links">
-                         <!-- Arxiv PDF link -->
-                      <span class="link-block">
-                        <a href="https://arxiv.org/abs/2304.05088" target="_blank"
-                        class="external-link button is-normal is-rounded is-dark">
-                        <span class="icon">
-                          <i class="fas fa-file-pdf"></i>
-                        </span>
-                        <span>Paper</span>
+                  <!-- Arxiv PDF link -->
+                  <span class="link-block">
+                      <a href="https://doi.org/10.1145/3699776" target="_blank"
+                      class="external-link button is-normal is-rounded is-dark">
+                      <span class="icon">
+                        <i class="fas fa-file-pdf"></i>
+                      </span>
+                      <span>Paper</span>
                       </a>
                     </span>
 
@@ -136,7 +136,7 @@
 		<div class="columns is-centered has-text-justified"> 
 			<div class="column is-four-fifths"> 
 				<h2 class="title is-3">Abstract</h2> <div class="content has-text-justified"> 
-					<p> Though research has shown the complementarity of camera- and inertial-based data, datasets which offer both egocentric video and inertial-based sensor data remain scarce. In this paper, we introduce WEAR, an outdoor sports dataset for both vision- and inertial-based human activity recognition (HAR). The dataset comprises data from 18 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and camera (egocentric video) data recorded at 10 different outside locations. Unlike previous egocentric datasets, WEAR provides a challenging prediction scenario marked by purposely introduced activity variations as well as an overall small information overlap across modalities. Benchmark results obtained using each modality separately show that each modality interestingly offers complementary strengths and weaknesses in their prediction performance. Further, in light of the recent success of temporal action localization models following the architecture design of the ActionFormer, we demonstrate their versatility by applying them in a plain fashion using vision, inertial and combined (vision + inertial) features as input. Results demonstrate both the applicability of vision-based temporal action localization models for inertial data and fusing both modalities by means of simple concatenation, with the combined approach (vision + inertial features) being able to produce the highest mean average precision and close-to-best F1-score. 
+					<p> Research has shown the complementarity of camera- and inertial-based data for modeling human activities, yet datasets with both egocentric video and inertial-based sensor data remain scarce. In this paper, we introduce WEAR, an outdoor sports dataset for both vision- and inertial-based human activity recognition (HAR). Data from 22 participants performing a total of 18 different workout activities was collected with synchronized inertial (acceleration) and camera (egocentric video) data recorded at 11 different outside locations. WEAR provides a challenging prediction scenario in changing outdoor environments using a sensor placement, in line with recent trends in real-world applications. Benchmark results show that through our sensor placement, each modality interestingly offers complementary strengths and weaknesses in their prediction performance. Further, in light of the recent success of single-stage Temporal Action Localization (TAL) models, we demonstrate their versatility of not only being trained using visual data, but also using raw inertial data and being capable to fuse both modalities by means of simple concatenation.
 					</p> 
 				</div> 
 			</div> 
@@ -207,9 +207,9 @@
 				<p>
 					The full dataset can be downloaded <a href="https://bit.ly/wear_dataset">this link</a>. The download folder is divided into 3 subdirectories
 					<ul>
-						<li><i>annotations (> 1MB)</i>: JSON-files containing annotations per-subject using the THUMOS14-style</li>
-						<li><i>processed (15GB)</i>: precomputed I3D, inertial and combined per-subject features</li>
-						<li><i>raw (130GB)</i>: Raw, per-subject video and inertial data</li>
+						<li><i>annotations (14MB)</i>: JSON-files containing annotations per-subject using the THUMOS14-style</li>
+						<li><i>processed (44GB)</i>: precomputed I3D, inertial and combined per-subject features</li>
+						<li><i>raw (164GB)</i>: Raw, per-subject video and inertial data</li>
 					</ul>
 					
 				<h2 class="title is-3">Reproduce Benchmarks</h2> <div class="content has-text-justified"> 
