@@ -67,7 +67,7 @@ Marius Bock (marius.bock@uni-siegen.de)
     numpages = {21},
     articleno = {175},
     doi = {10.1145/3699776},
-    url={https://doi.org/abs/10.1145/3699776}
+    url={https://dl.acm.org/doi/10.1145/3699776}
 }
 ```
 
