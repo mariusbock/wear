@@ -24,7 +24,7 @@ Install other requirements:
 pip install -r requirements.txt
 ```
 
-Compile C++ distributions of NMS (used by ActionFormer, TemporalMaxer and Tridet)
+Compile C++ distributions of NMS (used by ActionFormer and Tridet)
 
 ```
 cd camera_baseline/actionformer/libs/utils
