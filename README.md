@@ -25,9 +25,9 @@ Please follow instructions mentioned in the [INSTALL.md](/INSTALL.md) file.
 The full dataset can be downloaded [here](https://bit.ly/wear_dataset)
 
 The download folder is divided into 3 subdirectories
-- **annotations (> 1MB)**: JSON-files containing annotations per-subject using the THUMOS14-style
-- **processed (15GB)**: precomputed I3D, inertial and combined per-subject features
-- **raw (130GB)**: Raw, per-subject video and inertial data
+- **annotations (14MB)**: JSON-files containing annotations per-subject using the THUMOS14-style
+- **processed (44GB)**: precomputed I3D, inertial and combined per-subject features
+- **raw (164GB)**: Raw, per-subject video and inertial data
 
 ## Reproduce Experiments
 Once having installed requirements, one can rerun experiments by running the `main.py` script:
