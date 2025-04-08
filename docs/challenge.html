@@ -16,7 +16,7 @@
 	<meta name="keywords" content="datasets; human activity recognition; temporal action localization; wearable activity recognition">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<title>WEAR Dataset Challenge<br>@HASCA 2024</title>
+	<title>WEAR Dataset Challenge<br>@HASCA 2025</title>
 	<link rel="icon" type="image/x-icon" href="static/images/favicon.ico">
 	<link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
 	rel="stylesheet">
@@ -43,7 +43,7 @@
 			<div class="container is-max-desktop">
 				<div class="columns is-centered">
 					<div class="column has-text-centered">
-						<h1 class="title is-1 publication-title">WEAR Dataset Challenge<br>@HASCA 2024</h1>
+						<h1 class="title is-1 publication-title">2nd WEAR Dataset Challenge<br>@HASCA 2025</h1>
 						<div class="is-size-5 publication-authors">
 							<span class="author-block">Quick Links:</span>
 						</div>
@@ -69,41 +69,16 @@
 								</a>
 								<!-- Download Dataset Link -->
 								<span class="link-block">
-									<a href="https://uni-siegen.sciebo.de/s/DCI8EJlgWw49dPV" target="_blank"
+									<a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge/host" target="_blank"
 									class="external-link button is-normal is-rounded is-dark">
 									<span class="icon">
-										<i class="fa fa-database"></i>
+										<i class="fab fa-kaggle"></i>
 									</span>
-									<span>Download Challenge Data</span>
+									<span>Challenge Website</span>
 								</a><br>
-								<!-- Submit Link -->
-								<span class="link-block">
-									<a href="mailto:wear.challenge@gmail.com" target="_blank"
-									class="external-link button is-normal is-rounded is-dark">
-									<span class="icon">
-										<i class="fa fa-question"></i>
-									</span>
-									<span>Contact Challenge Support</span>
 								</a>
-								<span class="link-block">
-									<a href="mailto:wear.challenge@gmail.com" target="_blank"
-									class="external-link button is-normal is-rounded is-dark">
-									<span class="icon">
-										<i class="fa fa-code"></i>
-									</span>
-									<span>Submit Results</span>
 								</a>
-								<!-- Submit Paper -->
-								<span class="link-block">
-									<a href="https://new.precisionconference.com/submissions" target="_blank"
-									class="external-link button is-normal is-rounded is-dark">
-									<span class="icon">
-										<i class="fa fa-file"></i>
-									</span>
-									<span>Submit Paper</span>
-								</a>
-								
-							</span>
+								</span>
 						</div>
 					</div>
 				</div>
@@ -119,194 +94,128 @@
 	<div class="container"> 	
 		<div class="columns has-text-left is-four-fifths"> 
 			<div class="column">
-			<h2 class="title is-3 has-text-centered">CHALLENGE HAS OFFICIALLY ENDED!</h2>
 			<!-- Challenge abstract -->  
 			<h2 class="title is-3">Overview</h2> 
 			<div class="content has-text-justified"> 
 					<p class="has-text-grey is-size-7"><h3>Goal of the Challenge</h3></p>
 					<p>
-						The <i>First WEAR Dataset Challenge</i> is a Human Activity Recognition prediction challenge based on the inertial data of the original WEAR dataset <a href="#WEAR">[1]</a> publication. 
-						<br>
-						Challenge participants are tasked to predict the activity label of a yet unreleased test dataset of newly and re-recorded participants. Winners are determined based on the sample-wise macro F1-score averaged across all activities and participants. The challenge is part of the <a href="http://hasca2024.hasc.jp/">HASCA Workshop</a> at <a href="https://www.ubicomp.org/ubicomp-iswc-2024/">UbiComp/ ISWC 2024</a>.
+						The <i>2nd WEAR Dataset Challenge</i> is a Human Activity Recognition prediction challenge based on the inertial data of the <a href="http://mariusbock.github.io/wear/">WEAR dataset</a>. The challenge will be again part of the <a href="http://hasca2024.hasc.jp/">HASCA Workshop</a> at <a href="https://www.ubicomp.org/ubicomp-iswc-2025/">UbiComp/ ISWC 2025</a>.
+						<br><br>
+						This year's challenge will be all about robustness and generalization! We curated a new test dataset with four new participants. 
+						<i>But there is a twist!</i> This year we only provide you with random, sensor-specific 1-second sliding windows of each of the four test participants. Oh yeah, and we applied some random augmentations to the data that can occur due to different wearing conditions. This means that you will have to rely on your model's ability to generalize to new participants <i>and</i> deal with the noise and uncertainty that comes with real-world data.
+						<br><br>
+						More details can be found on the <a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge">Kaggle Challenge website</a>.
 					</p>
-					<p class="has-text-grey is-size-7"><h3>The Data & Submission Format</h3></p>
+					<p class="has-text-grey is-size-7"><h3>WEAR Challenge now on Kaggle!</h3></p>
 					<p>
-						The challenge dataset download contains accelerometer data of 18 particpants performing multiple outdoor fitness workouts. In total each participant performed 18 workout activities. Data was captured at the four limbs of each participant, being sampled at 50 Hz with a sensitivity of ±8G. The test dataset contains data of rerecorded and new participants performing the same workout and activities as the original participants. Participants are tasked to predict the activity label of each data record of the new participants using their prediction algorithm of choice. Submissions should contain the predicted activity label for each data record of the test dataset (see below for more details).
+						We are happy to announce that the WEAR Challenge is now also available on Kaggle! You can find the challenge <a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge">here</a>.
+						Unlike the first iteration of the challenge, submission of prediction results will only be done via Kaggle. By switching to Kaggle we hope to make the challenge more accessible to a wider audience and provide a more streamlined submission process. By using Kaggle's public and private leaderboard we hope to provide a more transparent and fair ranking process. Challenge participants will further be able to discuss the challenge and share their solutions on the Kaggle platform.
 					</p>
-					<p class="has-text-grey is-size-7"><h3>Submission to HASCA @ UbiComp/ ISWC 2024</h3></p>
-					To be part of the final ranking, participants will be required to submit a detailed paper to the HASCA workshop. The paper should contain technical description of the processing pipeline, the algorithms and the results achieved during the original WEAR dataset. Submissions must follow the HASCA format (see below for more details).
+					<p class="has-text-grey is-size-7"><h3>IMPORTANT DISCLAIMER</h3></p>
+					To be part of the final ranking and eligible for prices, participants will be required to submit a technical report to the HASCA workshop. The paper should contain technical description of the processing pipeline, the algorithms and the results achieved using the original WEAR dataset. An example of a technical report can be found here <a href="https://doi.org/10.1145/3675094.3678453">winners of last year's challenge</a>. Submissions must follow the HASCA format (see below for more details).
+					</p>
 
+				<!-- Deadlines -->    
+				<h3 class="title is-3">Important Dates</h3> 
+				<div class="content has-text-justified"> 
+				<ul>
+					<li><u>Registration open:</u> April 8, 2025</li>
+					<li><u>Challenge duration:</u> April 8, 2025 - July 04, 2025</li>
+					<li><u>HASCA-WEAR paper submission:</u> July 04, 2025 AoE</li>
+					<li><u>HASCA-WEAR review notification:</u> July 14, 2025</li>
+					<li><u>HASCA-WEAR camera ready submission:</u> July 30, 2025</li>
+					<li><u>HASCA Workshop:</u> October 12-13, 2025 in Espoo, Finland</li>
+				</ul>
+					
+				</div>
+				<!-- End deadlines -->  
+					<p class="has-text-grey is-size-7"><h3>Final Ranking at Conference & Prizes</h3></p>
+					<p>
+						We will announce winners of the challenge at the HASCA workshop. In order to be eligible for prizes and be part of the final ranking announced at the conference, participants need to tell us when submitting their technical report, which submission on Kaggle is their final submission. Prizes will be awarded to the three teams with the highest private leaderboard score at the time of the paper submission deadline.
+					</p>
 					<p class="has-text-grey is-size-7"><h3>About the WEAR Dataset</h3></p>
-					<p> The WEAR dataset is an outdoor sports dataset for inertial- and video-based human activity recognition (HAR). The dataset comprises data from 18 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and egocentric video data recorded at 10 different outside locations. WEAR provides a challenging prediction scenario marked by purposely introduced activity variations as well as an overall small information overlap across modalities. This challenge focuses on the inertial data only.</br>
+					<p> The WEAR dataset is an outdoor sports dataset for inertial- and video-based human activity recognition (HAR). The dataset comprises data from 22 participants performing a total of 18 different workout activities with untrimmed inertial (acceleration) and egocentric video data recorded at 11 different outside locations. WEAR provides a challenging prediction scenario marked by purposely introduced activity variations as well as an overall small information overlap across modalities. This challenge focuses on the inertial data only.</br>
 					</p> 
 				</div>
 			<!-- End Challenge abstract --> 
-			
-			</br>
-			<!-- Deadlines -->    
-			<h2 class="title is-3">Important Dates</h2> 
-			<div class="content has-text-justified"> 
-			<ul>
-				<li><u>Registration open:</u> April 12, 2024</li>
-				<li><u>Challenge duration:</u> April 12, 2024 - July 04, 2024</li>
-				<li><u>HASCA-WEAR paper submission:</u> July 04, 2024 AoE</li>
-				<li><u>HASCA-WEAR review notification:</u> July 11, 2024</li>
-				<li><u>HASCA-WEAR camera ready submission:</u> July 19, 2024</li>
-				<li><u>HASCA Workshop:</u> October 05-06, 2024 in Melbourne, Australia</li>
-			</ul>
-				
-			</div>
-			<!-- End deadlines -->  
-
-			<!-- Prizes -->  
-			<h2 class="title is-3">Prizes</h2> 
-			<div class="content has-text-justified"> 
-				<i>tba</i>
-			</div>
-			<!-- End prizes -->
-			
-			<!-- Registration -->    
-			<h2 class="title is-3">Registration</h2> 
-			<div class="content has-text-justified"> 
-				<p>Registration is now open! In order to participate, each team must send a registration email to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>, stating the:
-					<ul>
-						<li>Name of the team + e-mail adress of one participant representing the team</li>
-						<li>Full Names of the participants in the team</li>
-						<li>Affiliations of each participant (non-affiliated persons are also encouraged to participate)</li>
-					</ul>
-				</p>
-			</div>
-			<!-- End registration -->
-			
-			<!-- Downloads -->    
+	</br>
+		<!-- Downloads -->    
 			<h2 class="title is-3">Challenge Data Download</h2> 
 			<div class="content has-text-justified"> 
 				<p>
-					<ul>
-						<li><b>Training Data</b>:  <a href="https://uni-siegen.sciebo.de/s/79eim5jOzRBlgFP">download [approx. 600 MB]</a></li>
-						<li><b>Test Data</b>:  <a href="https://uni-siegen.sciebo.de/s/BZV1XwxrYv61Ytk">download  [approx. 150 MB]</a></li>
-					</ul>
+					Please visit the <a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge">Kaggle challenge page</a> to download the training and test data. The training data is provided as a directory containing the CSV files of the 22 participants. The test data is provided as a single CSV file with each row representing one of the sliding windows of the 4 new participants, which are to be predicted. For more details please refer to the <a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge/data">Data section</a> on Kaggle.
 				</p>
 			</div>
 			<!-- End Downloads -->
-			
+		</br>
+
 			<!-- Evaluation -->    
 			<h2 class="title is-3">Evaluation</h2> 
 			<div class="content has-text-justified"> 
 				<p>
-					Evaluation of submissions will be based on the <b>sample-wise, macro F1-score</b> averaged across all participants. The macro F1-score is the average of the F1-scores of each activity class. Please check the <a href="https://github.com/mariusbock/wear">WEAR dataset repository</a> for sample code on how to translate windowed data back to record-wise data and calculate the macro F1-score.
+					Evaluation of submissions will be based on the <b>macro F1-score</b>. The macro F1-score is the average of the F1-scores of each activity class.
 				</p>
 			</div>
 			<!-- End Evaluation -->
-
+		</br>
 			<!-- Submission -->    
 			<h2 class="title is-3">Submission Guidelines</h2> 
 			<div class="content has-text-justified"> 
-
 			<h3>Submission of Final Predictions:</h3>
-				To submit your final predictions of the test dataset, please send a ZIP-archive file “{Your_Team_Name}.zip" (or a download link to it) to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>. The ZIP-archive should contain the 6 test participant CSV files appended with an additional column <code>label</code> being the predicted recordwise labels. Note that we will assume same label names as in the train dataset and same ordering - thus make sure to keep the order of the records and use the same label names as in the training data. 
-				
-				An example submission (with random labels) can be <a href="https://uni-siegen.sciebo.de/s/ZFxD60GriENY5FU">downloaded here</a>. 
+			<p>
+				Submission of the predictions will happen solely via <a href="https://www.kaggle.com/c/wear-dataset-challenge">Kaggle</a>. All details on the submission format and final submissions can be found on Kaggle.
+                <br><br>The final ranking of the WEAR Dataset challenge will be announced at the HASCA workhop. Ranking of the teams, which will be eligible for prizes, will be determined based on the private leaderboard score as of the technical report submission deadline. <br> When submitting their technical report, participants will need to:
+                <ul>
+                    <li>tell us their team name as specified on Kaggle, and</li>
+                    <li>tell us which submission on Kaggle is going to be their submission used for ranking.</li>
+                </ul>
+                <b>NOTE:</b> If authors do not tell us specifically which solution is to be used, we will use their latest submission as of the paper submission deadline. 
+                <br><br>Prizes will be awarded to the three teams with the highest private leaderboard score at the time of the paper submission deadline.
+			</p>
 			<h3>Submission of Technical Report:</h3>
 
-			Submission of the technical report will happen via <a href="https://new.precisionconference.com/submissions">PCS</a> <i>(select SIGCHI / UbiComp 2024 / UbiComp 2024 Workshop - HASCA-WEAR)</i>. Your technical report should detail your solution as well as provide preliminary results you achieved on the train dataset. ACM requires UbiComp/ISWC 2024 workshop submissions to use the double-column template. Your technical report must be between 3 to 6 pages including references. Submissions do not need to be anonymous. For details on the template please refer to the <a href="https://www.ubicomp.org/ubicomp-iswc-2024/authors/formatting/">UbiComp/ISWC website</a>.
+			Submission of the technical report will happen via <a href="https://new.precisionconference.com/submissions">PCS</a> <i>(select SIGCHI / UbiComp 2025 / UbiComp 2025 Workshop - HASCA-WEAR)</i>. Your technical report should detail your solution as well as provide preliminary results you achieved on the train dataset. ACM requires UbiComp/ISWC 2025 workshop submissions to use the double-column template. Your technical report must be between 3 to 6 pages including references. Submissions do not need to be anonymous. For details on the template please refer to the <a href="https://www.ubicomp.org/ubicomp-iswc-2024/authors/formatting/">UbiComp/ISWC website</a>. For an example of a technical report please refer to the <a href="https://doi.org/10.1145/3675094.3678453">winners of last year's challenge</a>.
 			</div>
 			<!-- End Submission -->
+		</br>
 
-			<!-- Format -->    
-			<h2 class="title is-3">Dataset format</h2> 
-			<div class="content has-text-justified"> 
-				<h3>Activities & Recording Scenario</h3>
-				<p> 
-					Each participant performed a set of 18 workout activities. These activities include running-, stretching- and strength-based exercises, with base activities like push-ups being complemented with complex variations that alter and/ or extend the performed movement during the exercise. Activities were divided across multiple recording sessions, with each session consisting of uninterrupted data streams of all modalities. Each participant was tasked to perform each exercise for at least 90 seconds, but had the freedom to choose the order of activities and take breaks as desired. 
-				</p>
-				</br>
-				<video autoplay is-centered loop muted width="100%" height="auto" src="static/videos/mosaic_vertical_static-crop.mp4"></video>
-			</div>
-
-			<div class="content has-text-justified"> 
-				<h3>Training Data</h3> 
-				<p>
-					The original dataset comprises of outdoor workouts of 18 participants. Each workout is divided across multiple session. In total more than 15 hours were recorded at 10 outdoor locations. The training data contains the raw sensor data of the 18 partipants which were part of the original WEAR dataset <a href="#WEAR">[1]</a>. The sensors were placed at four body locations (right wrist, left wrist, right ankle and left ankle). Each sensor sampled 3D-accelerometer data. During all recording sessions sensor orientation was fixed according to one pre-defined sensor placement. Each sampled data record is labeled as one of the 18 (+ <code>null</code>-class) possible activities. 
-				<br>
-					<h3>Dataset Overview</h3>
-					<p>
-						<b>Training Data</b>: The training data is provided in a seperate CSV files per subject. Each file contains the following columns:
-						<ul>
-							<li><i>sbj_id</i>: subject identifier (<code>int</code> between <code>0</code> and <code>17</code>)</li>
-							<li><i>right_arm_acc_x:</i> right arm acceleration x-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>right_arm_acc_y:</i> right arm acceleration y-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>right_arm_acc_z:</i> right arm acceleration z-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>right_leg_acc_x:</i> right leg acceleration x-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>right_leg_acc_y:</i> right leg acceleration y-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>right_leg_acc_z:</i> right leg acceleration z-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_leg_acc_x:</i> left leg acceleration x-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_leg_acc_y:</i> left leg acceleration y-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_leg_acc_z:</i> left leg acceleration z-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_arm_acc_x:</i> left arm acceleration x-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_arm_acc_y:</i> left arm acceleration y-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>left_arm_acc_z:</i> left arm acceleration z-axis (<code>float</code> between <code>-8.0</code> and <code>+8.0</code>)</li>
-							<li><i>label:</i> activity label (<code>str</code> being one of the 18 workout activities or <code>null</code> during breaks)</li>
-						</ul>
-					</p>
-					
-					<h3>Testing Data</h3> 
-					The test dataset follows the same structure as the training data. In total the test dataset consists of 6 new and existing participants performing the same 18 activities as the original participants. The test dataset is divided into multiple CSV files, each containing the sensor data of one participant.
-
-					Participants of the test dataset are:
-					<ul>
-						<li><b>sbj_0_2 (112050 records):</b> additional session of participant with id 0 from the original dataset.</li>
-						<li><b>sbj_14_2 (167750 records):</b> additional session of participant with id 14 from the original dataset.</li>
-						<li><b>sbj_18 (131600 records):</b> session of a new participant (id 18).</li>
-						<li><b>sbj_19 (110050 records):</b> session of a new participant (id 19).</li>
-						<li><b>sbj_20 (95400 records):</b> session of a new participant (id 20).</li>
-						<li><b>sbj_21 (127800 records):</b> session of a new participant (id 21).</li>
-					</ul>
-					
-				</p>
-			</div>
-			<!-- End Format -->
 			
 			<!-- Rules -->    
-			<h2 class="title is-3">Rules</h2> 
+			<h2 class="title is-3">Challenge Rules</h2> 
 			<div class="content has-text-justified"> 
 				<p>
 					<ul>
 						<li>You do not work in or collaborate with the WEAR dataset project (<a href=http://mariusbock.github.io/wear/>http://mariusbock.github.io/wear/</a>)</li>
 						<li>If you submit an entry, but are not qualified to enter the contest, this entry is voluntary. The organizers reserve the right to evaluate it for scientific purposes. If you are not qualified to submit a contest entry and still choose to submit one, under no circumstances will such entries qualify for sponsored prizes.</li>
-						<li>Only registered teams will be considered for the final ranking. Teams must register via an e-mail to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a> (see above for details).</li>
-						<li>To be part of the final ranking, participants will be required to publish a detailed paper in the proceedings of the <a href="http://hasca2024.hasc.jp/">HASCA workshop</a>; The dates will be set during the competition. Publishing of the paper also requires that at least one team member is registered for the <a href="http://hasca2024.hasc.jp/">HASCA workshop</a>.</li>
-						<li> The participants' predictions must be submitted online by sending an email to <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>. The submission e-mail should contain a link to the predictions file, using services such as Dropbox, Google Drive, etc. In case the participants cannot provide link using some file sharing service, they should contact the organizers via email <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a>.</li>
-						<li>Only one single submission is allowed per team. In case of multiple submission only the one which was submitted last will be considered for the final ranking. The same person cannot be in multiple teams, except if that person is a supervisor. </li>
+						<li>To be part of the final ranking, participants will be required to publish a technical report in the proceedings of the <a href="http://hasca2024.hasc.jp/">HASCA workshop</a> (see above for details). Publishing of the paper also requires that at least one team member is registered for the <a href="http://hasca2024.hasc.jp/">HASCA workshop</a>.</li>
+						<li> Submission of each team's final predictions will happen via Kaggle. Only one single submission is allowed per team. The same person cannot be in multiple teams, except if that person is a supervisor. </li>
+						<li>The final ranking of teams eligible for prizes, will be determined based on the private leaderboard score as of the technical report submission deadline. When submitting their technical report, participants need to tell organizers their team name as specified on Kaggle, and which submission on Kaggle is going to be their submission used for ranking. If authors do not tell us specifically which solution is to be used, we will use their latest submission as of the paper submission deadline.</li>
+						<li>Prizes will be awarded to the three teams with the highest private leaderboard score at the time of the paper submission deadline.</li>
 						</ul>
 					</ul>
 				</p>
 			</div>
 			<!-- End Rules -->
-			
+		</br>
+
 			<!-- Other -->
 			<h2 class="title is-3">Contact</h2> 
 			<div class="content has-text-justified">
-				Challenge related questions: <a href="mailto:wear.challenge@gmail.com">wear.challenge@gmail.com</a><br>
-				All other questions: <a href="mailto:marius.bock@uni-siegen.de">marius.bock@uni-siegen.de</a>
+				If you have any questions feel free to contact me via <a href="mailto:marius.bock@uni-siegen.de">e-mail</a> or use the <a href="https://www.kaggle.com/competitions/2nd-wear-dataset-challenge/discussion/">discussion forum</a> on Kaggle.
 			</div>
-			<h2 class="title is-3">Organizers</h2> 
+		</br>
+
+			<h2 class="title is-3">Organizing Comittee</h2> 
 			<div class="content has-text-justified"> 
 				<a href="https://scholar.google.com/citations?user=7HPBugEAAAAJ&hl=en&oi=ao">Marius Bock</a>, University of Siegen<br>
 				<a href="https://scholar.google.com/citations?user=LkNmrfEAAAAJ&hl=en&oi=ao">Christina Runkel</a>, University of Cambridge<br>
-				<a href="https://scholar.google.de/citations?user=cs3xPp4AAAAJ&hl=de">Alexander Hoelzemann</a>, University of Siegen<br>
-				<a href="https://scholar.google.com/citations?user=RwxlF2EAAAAJ&hl=en&oi=ao">Mathias Ciliberto</a>, University of Sussex<br>
+				<a href="https://scholar.google.de/citations?user=cs3xPp4AAAAJ&hl=de">Dr. Alexander Hoelzemann</a>, University of Colorado Boulder<br>
+				<a href="https://scholar.google.com/citations?user=RwxlF2EAAAAJ&hl=en&oi=ao">Dr. Mathias Ciliberto</a>, University of Cambridge<br>
 				<a href="https://scholar.google.com/citations?user=iPI39lEAAAAJ&hl=en&oi=ao">Prof. Dr. Kristof Van Laerhoven</a>, University of Siegen<br>
 				<a href="https://scholar.google.com/citations?user=sxzdAGUAAAAJ&hl=en&oi=ao">Prof. Dr. Michael Moeller</a>, University of Siegen
 			</div>
-			<h2 class="title is-3">References</h2> 
-			<div class="content has-text-justified"> 
-				<p>
-					<a id="WEAR">[1]</a> 
-					Marius Bock, Hilde Kuehne, Kristof Van Laerhoven and Michael Moeller. 2023. WEAR: An Outdoor Sports Dataset for Wearable and Egocentric Activity Recognition. CoRR abs/2304.05088. <a href="https://arxiv.org/abs/2304.05088">https://arxiv.org/abs/2304.05088</a>
-					
-				</p>
-			</div>
+		</br>
+
 			<h2 class="title is-3">License</h2> 
 			<div class="content has-text-justified"> 
 				<p>
